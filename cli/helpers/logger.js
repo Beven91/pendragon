@@ -56,7 +56,7 @@ StackLogger.prototype.format = function(message) {
     var date = new Date();
     var parts = [date.getFullYear(), date.getMonth() + 1, date.getDate()];
     var parts2 = [date.getHours(), date.getMinutes(), date.getMilliseconds()];
-    return 'NodeMsite: ' + message;
+    return 'Archer: ' + message;
 }
 
 /**

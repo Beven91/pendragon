@@ -37,7 +37,7 @@ TemplateCompiler.prototype.compileTo = function (file, targetFile, obj) {
   var dir = path.dirname(targetFile);
   fse.ensureDirSync(dir);
   fse.writeFileSync(targetFile, template);
-  logger.log('compile: ' + file.split(rootDir)[1] + ' > ' + targetFile.split(rootDir)[1]);
+  logger.log(' Make ' + file.split(rootDir)[1] + ' > ' + targetFile.split(rootDir)[1]);
 }
 
 /**

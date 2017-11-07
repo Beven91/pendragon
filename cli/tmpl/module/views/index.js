@@ -13,7 +13,7 @@ export default class $name$Screen extends Component {
    */
   render() {
     return (
-      <View>$name$</View>
+      <View onClick={this.props.submit}>$name$</View>
     )
   }
 }
