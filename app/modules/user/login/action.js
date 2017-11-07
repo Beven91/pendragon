@@ -1,4 +1,4 @@
-import { UserService } from '../../../api/index';
+import { UserService } from '../../../api';
 
 const userService = new UserService();
 
