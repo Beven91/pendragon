@@ -6,10 +6,12 @@
  */
 
 // 引入依赖>>
+import './base.css';
+import dantejs from 'dantejs';
 import Validator from '../validation';
 import React, { PropTypes } from 'react'
-import { Toast } from 'antd-mobile'
-import { shallowEqualImmutable } from "react-immutable-render-mixin";
+import { Modal, Toast } from 'antd-mobile';
+import { shallowEqualImmutable } from 'react-immutable-render-mixin';
 
 export default class Base extends React.Component {
 
@@ -52,5 +54,51 @@ export default class Base extends React.Component {
    */
   modelValidation(data, partten) {
     return Validator.validator.model(data, partten);
+  }
+
+  /**
+   * 弹出一个alert对话框
+   * @param {String/JSXElement} title 标题
+   * @param {String/JSXElement} message 对话消息
+   * @param {String} callback 点击确定按钮的回调函数
+   */
+  alert(title, message, callback) {
+    const actions = [
+      { text: '确定', onPress: callback }
+    ]
+    return Modal.alert(title, message, actions);
+  }
+
+  /**
+   * 弹出一个confirm对话框
+   * @param {String/JSXElement} title 标题
+   * @param {String/JSXElement} message 对话消息
+   */
+  confirm(title, message) {
+    const emitter = new dantejs.EventEmitter();
+    const actions = [
+      { text: '确定', onPress: () => emitter.emit('ok') },
+      { text: '取消', onPress: () => emitter.emit('cancel') }
+    ]
+    Modal.alert(title, message, actions);
+    return {
+      /**
+       * 点击确定按钮回调函数
+       */
+      yes: (handler) => emitter.once('ok', handler),
+      /**
+       * 点击取消按钮回调函数
+       */
+      cancel: (handler) => emitter.once('cancel', handler)
+    }
+  }
+
+  /**
+   * 显示悬浮的Loading效果
+   * @param {String} message loading效果显示的文案 默认为：请稍后...
+   * @param {Number} duration loaing效果显示时长 默认 1秒 单位：秒
+   */
+  showLoading(message, duration = 1) {
+    Toast.loading(message, duration)
   }
 }

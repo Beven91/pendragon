@@ -1,7 +1,5 @@
-import Network from './base';
-import UserService from './services/user.service';
+import UserService from './user.service';
 
 module.exports = {
-    Network,
     UserService
 }

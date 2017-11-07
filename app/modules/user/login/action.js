@@ -2,9 +2,12 @@ import { UserService } from '../../../api/index';
 
 const userService = new UserService();
 
-module.exports = {
-    login(userName, password) {
-        return { promise: userService.ajaxLogin(userName, password) }
+class UserActions {
+    
+    login() {
+        return userService.ajaxLogin(userName, password).showLoading().redux();
     }
 }
+
+module.exports = new UserActions();
 

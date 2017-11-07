@@ -23,13 +23,6 @@ class UserLoginScreen extends Component {
    * 登陆业务
    */
   handleSubmit() {
-
-  }
-
-  /**
-   * 登录
-   */
-  goLogin(){
     this.props.login('beven','123456');
   }
 
@@ -44,7 +37,7 @@ class UserLoginScreen extends Component {
   render() {
     return (
       <View >
-        <Button  onClick={() =>this.goLogin() }>
+        <Button  onClick={() =>this.handleSubmit() }>
           <Text>登陆</Text>
         </Button>
       </View>
