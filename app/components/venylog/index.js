@@ -1,3 +1,4 @@
+import "./index.css"
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -52,6 +53,6 @@ export default class VenyLogProvider extends React.Component {
 
     //渲染组件
     render() {
-        return (<div ref="venylog">{this.props.children}</div>)
+        return (<div ref="venylog" className="venylog">{this.props.children}</div>)
     }
 }
