@@ -120,7 +120,7 @@ class StackNavigator extends Component {
 Navigation.StackNavigator = (routeConfigs, stackConfig) => {
     let { TabRouter, createNavigator } = Navigation;
     let navigator = createNavigator(TabRouter(routeConfigs, stackConfig))(StackNavigator);
-    navigator.initialRouteName = "";
+    navigator.initialRouteName = window.location.pathname;
     return navigator;
 }
 
