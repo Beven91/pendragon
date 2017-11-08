@@ -51,7 +51,7 @@ module.exports = {
     entry: {
         app: [
             './' + path.basename(config.entry),
-            isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000'
+            isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true'
         ].filter(function (v) { return v; })
     },
     output: {
