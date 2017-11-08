@@ -27,7 +27,7 @@ app.use(webpackDevMiddleware(compiler, {
 // 添加webpack热部署中间件到app中
 app.use(webpackHotMiddleware(compiler))
 
-app.get('/', function (req, resp, next) {
+app.use(function (req, resp, next) {
     resp.sendFile(path.resolve('index.html'));
 })
 
@@ -41,7 +41,7 @@ const server = app.listen(3000, (err) => {
         var accessUrl = 'http://localhost:' + port;
         console.log('--------------------------')
         console.log('===> 😊  Starting Pendragon ...')
-        console.log('===>  Environment: ' + process.env.NODE_ENV)
+        console.log('===>  Environment: ' + process.env.NODE_ENV || 'development')
         console.log('===>  Listening on port: ' + port)
         console.log('===>  Url: ' + accessUrl)
         console.log('--------------------------')

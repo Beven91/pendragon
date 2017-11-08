@@ -206,13 +206,13 @@ function merge(data, merge) {
  * @param {Object} data 请求数据
  */
 function combine(uri, method, data) {
-    if (/(https:|http:)/.test(uri) && Options.baseUri) {
+    if (!/(https:|http:)/.test(uri) && Options.baseUri) {
         uri = Options.baseUri + uri;
     }
     const isGet = method === "Get";
     const search = isGet ? Object.keys(data).map((k) => k + '=' + data[k]) : [];
     const char = uri.indexOf('?') > -1 ? '&' : '?';
-    return uri + char + search.join('&');
+    return search.length > 0 ? uri + char + search.join('&') : uri;
 
 }
 

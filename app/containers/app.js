@@ -1,4 +1,6 @@
+import React from 'react';
 import Hanzo from 'hanzojs/mobile'
+import VenyLogProvider from '../components/venylog';
 import thunkMiddleware from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
 
@@ -21,4 +23,18 @@ App.use({
 // 路由注册
 App.router(require('./router'))
 
-export default App;
+const Pendragon = App.start()
+
+class PendragonApp extends React.Component {
+
+    render() {
+        return (
+            <VenyLogProvider>
+                <Pendragon />
+            </VenyLogProvider>
+        )
+    }
+
+}
+
+export default PendragonApp;

@@ -4,7 +4,7 @@ const userService = new UserService();
 
 class UserActions {
     
-    login() {
+    login(userName, password) {
         return userService.ajaxLogin(userName, password).showLoading().redux();
     }
 }

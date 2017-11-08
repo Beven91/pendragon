@@ -18,7 +18,7 @@ class IndexScreen extends Component {
         <Button style={styles.href} activeStyle={false} onClick={() => this.navigate('Login')}>
           <Text style={styles.fontColor}>登陆</Text>
         </Button>
-        <Button style={styles.href} onClick={() => this.navigate('Register')}>
+        <Button data-venylog="click register" style={styles.href} onClick={() => this.navigate('Register')}>
           <Text style={styles.fontColor}>注册</Text>
         </Button>
         <Button style={styles.href} onClick={() => this.navigate('Antd')}>

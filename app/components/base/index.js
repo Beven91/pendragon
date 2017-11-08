@@ -9,7 +9,8 @@
 import './base.css';
 import dantejs from 'dantejs';
 import Validator from '../validation';
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types';
 import { Modal, Toast } from 'antd-mobile';
 import { shallowEqualImmutable } from 'react-immutable-render-mixin';
 
@@ -17,6 +18,10 @@ export default class Base extends React.Component {
 
   constructor(props) {
     super(props)
+  }
+
+  static contextTypes = {
+    sendBeacon: PropTypes.func
   }
 
   /**
@@ -100,5 +105,15 @@ export default class Base extends React.Component {
    */
   showLoading(message, duration = 1) {
     Toast.loading(message, duration)
+  }
+
+  /**
+  * 发送一条打点日志
+  * @param {Object} record 日志对象
+  */
+  sendBeacon(record) {
+    if(this.context.sendBeacon){
+      return this.context.sendBeacon(record);
+    }
   }
 }
