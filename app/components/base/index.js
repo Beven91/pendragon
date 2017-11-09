@@ -112,8 +112,24 @@ export default class Base extends React.Component {
   * @param {Object} record 日志对象
   */
   sendBeacon(record) {
-    if(this.context.sendBeacon){
+    if (this.context.sendBeacon) {
       return this.context.sendBeacon(record);
     }
+  }
+
+  /**
+   * 跳转到指定路由
+   * @param {String} route 路由名称
+   * @param {Object} params
+   */
+  forward(uri, params) {
+    return this.props.navigation.navigate(route, params);
+  }
+
+  /**
+   * 路由后退
+   */
+  back(){
+    return this.props.navigation.goBack();
   }
 }
