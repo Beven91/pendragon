@@ -12,9 +12,8 @@ import Validator from '../validation';
 import React from 'react'
 import PropTypes from 'prop-types';
 import { Modal, Toast } from 'antd-mobile';
-import { shallowEqualImmutable } from 'react-immutable-render-mixin';
 
-export default class Base extends React.Component {
+export default class Base extends React.PureComponent {
 
   constructor(props) {
     super(props)
@@ -22,17 +21,6 @@ export default class Base extends React.Component {
 
   static contextTypes = {
     sendBeacon: PropTypes.func
-  }
-
-  /**
-   * 提供默认的 shouldComponentUpdate
-   * 使用immuteablejs 优化组件性能 阻止组件重复渲染
-   * @param nextProps {Object} 新的props
-   * @param nextState {Object} 新的state
-   * @returns {Boolean} 
-   */
-  shouldComponentUpdate(nextProps, nextState) {
-    return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState)
   }
 
   /**

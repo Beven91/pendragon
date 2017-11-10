@@ -50,6 +50,18 @@ module.exports = {
     stats: isProudction ? 'errors-only' : 'detailed',
     entry: {
         app: [
+            'babel-polyfill',
+            'react',
+            'react-dom',
+            'react-navigation',
+            'dantejs',
+            'hanzojs/mobile',
+            'redux-thunk',
+            'redux-promise-middleware',
+            'hanzojs/router',
+            'whatwg-fetch',
+            'prop-types',
+            './components/base',
             './' + path.basename(config.entry),
             isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true'
         ].filter(function (v) { return v; })
@@ -69,6 +81,7 @@ module.exports = {
         new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
         new RuntimeCapturePlugin(),
         new CodeSpliterPlugin(isProudction ? config.releaseDir : null),
+        new webpack.optimize.CommonsChunkPlugin('app'),
         new webpack.NoEmitOnErrorsPlugin(),
     ].concat(isProudction ? proPlugins : devPlugins),
     module: {
@@ -106,19 +119,19 @@ module.exports = {
                 ],
                 exclude: []
             },
-            // {
-            //     // 图片类型模块资源访问
-            //     test: /\.(png|jpg|jpeg|gif|webp|bmp|ico|jpeg)$/,
-            //     loader: [
-            //         {
-            //             loader: 'image-web-loader',
-            //             options: config.minOptions
-            //         },
-            //         {
-            //             loader: 'file-loader'
-            //         }
-            //     ]
-            // },
+            {
+                // 图片类型模块资源访问
+                test: /\.(png|jpg|jpeg|gif|webp|bmp|ico|jpeg)$/,
+                loader: [
+                    {
+                        loader: 'image-web-loader',
+                        options: config.minOptions
+                    },
+                    {
+                        loader: 'file-loader'
+                    }
+                ]
+            },
             {
                 test: /\.(svg)$/i,
                 loader: 'web-svg-sprite-loader',
@@ -137,7 +150,7 @@ module.exports = {
                                     ident: 'postcss',
                                     plugins: () => [
                                         autoprefixer({
-                                            browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 8', 'iOS >= 8', 'Android >= 4'],
+                                            browsers: ['iOS >= 8', 'Android >= 4'],
                                         }),
                                         pxtorem({ rootValue: 100, propWhiteList: [] })
                                     ]

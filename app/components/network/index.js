@@ -151,6 +151,13 @@ class AttachResponse {
     }
 
     /**
+     * 设定返回json数据
+     */
+    json() {
+        return this.then((response) => { response.json() });
+    }
+
+    /**
      * 返回一个redux action
      * @returns {promise:Promise,...}
      */
@@ -168,7 +175,7 @@ function adapter(data, headers) {
     data = merge(data, Options.data);
     headers = headers || {};
     //默认content-type为 
-    let ct = headers['Content-Type'] || 'application/x-www-form-urlencoded';
+    let ct = headers['Content-Type'] || Options.defaultContentType || 'application/x-www-form-urlencoded';
     switch (ct) {
         case 'application/json':
             return JSON.stringify(data);

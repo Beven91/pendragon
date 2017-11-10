@@ -1,3 +1,3 @@
 module.exports = {
-    baseUri:'http://dev.api.com/'
+    baseUri:'http://rapapi.org/mockjsdata/28825/'
 }
