@@ -49,7 +49,7 @@ class UserLoginScreen extends Component {
         <View className="login-screen">
           <View className="logo">Pendragon</View>
           <InputItem ref="username" className="login-input">用户名:</InputItem>
-          <InputItem ref="password" className="login-input">密码:</InputItem>
+          <InputItem type="password" ref="password" className="login-input">密码:</InputItem>
           <Button className="btn-submit" onClick={this.handleSubmit}>
             <Text>登陆</Text>
           </Button>

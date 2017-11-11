@@ -7,11 +7,16 @@
 
 // 引入依赖>>
 import './base.css';
-import dantejs from 'dantejs';
 import Validator from '../validation';
 import React from 'react'
 import PropTypes from 'prop-types';
+import WechatService from '../../api/wechat.service';
 import { Modal, Toast } from 'antd-mobile';
+import wx from '../wechat';
+import dantejs from 'dantejs';
+
+const service = new WechatService();
+let isWechatConnetion = false;
 
 export default class Base extends React.PureComponent {
 
@@ -117,7 +122,44 @@ export default class Base extends React.PureComponent {
   /**
    * 路由后退
    */
-  back(){
+  back() {
     return this.props.navigation.goBack();
   }
+
+  /**
+   * 连接微信sdk
+   * @param apiList 需要使用的apiList 例如：['onMenuShareTimeline','...']
+   */
+  connectionWechat(apiList) {
+    if (isWechatConnetion) {
+      return this.onWechatConnection(wx);
+    }
+    service
+      .permission({ url: window.location.href })
+      .then((data) => {
+        const config = {
+          debug: false,
+          appId: data.appid,
+          timestamp: data.timestamp,
+          nonceStr: data.noncestr,
+          signature: data.signature,
+          jsApiList: apiList,
+        };
+        isWechatConnetion = true;
+        //配置微信
+        wx.config(config);
+        //监听微信sdk ready事件
+        wx.ready(() => this.onWechatConnection(wx));
+      })
+  }
+
+  /**
+   * 微信sdk操作事件函数，可以通过子类复写此函数执行具体微信操作
+   * @param wx 微信sdk对象 
+   * 注意：当前函数在微信sdk初始化成功后自动调用
+   */
+  onWechatConnection(wx) {
+
+  }
+
 }
