@@ -140,7 +140,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.css$/i,
+                test: /\.css$|\.less$/i,
                 use: ['css-hot-loader'].concat(
                     ExtractTextPlugin.extract({
                         fallback: 'style-loader',

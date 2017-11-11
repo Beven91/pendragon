@@ -35,6 +35,8 @@ class StackNavigator extends Component {
     getNavigation() {
         const { router } = this.props;
         const state = this.state;
+        const { path, params } = router.getPathAndParamsForState(state);
+        state.params = params;
         const navigation = addNavigationHelpers({
             state: this.state,
             dispatch: this.dispatch,

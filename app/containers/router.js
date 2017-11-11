@@ -19,6 +19,13 @@ module.exports = (modules) => {
           navigationOptions: {
             title: '登录'
           }
+        },
+        Home: {
+          screen: modules.Home,
+          path: 'index',
+          navigationOptions: {
+            title: '首页'
+          }
         }
       })
     }
