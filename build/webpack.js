@@ -152,7 +152,7 @@ module.exports = {
                                         autoprefixer({
                                             browsers: ['iOS >= 8', 'Android >= 4'],
                                         }),
-                                        pxtorem({ rootValue: 100, propWhiteList: [] })
+                                        pxtorem({ rootValue: 37.5, propWhiteList: [] })
                                     ]
                                 }
                             }
