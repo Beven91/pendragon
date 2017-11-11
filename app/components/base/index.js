@@ -110,7 +110,7 @@ export default class Base extends React.PureComponent {
    * @param {String} route 路由名称
    * @param {Object} params
    */
-  forward(uri, params) {
+  forward(route, params) {
     return this.props.navigation.navigate(route, params);
   }
 
