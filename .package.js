@@ -11,7 +11,7 @@ module.exports = {
     entry: path.resolve('app/index.js'),
     //靜態資源
     static: [
-        '.bmp', '.ico', '.gif', '.jpg', '.jpeg', '.png', '.psd', '.svg', '.webp', // Image formats
+        '.psd', // Image formats
         '.m4v', '.mov', '.mp4', '.mpeg', '.mpg', '.webm', // Video formats
         '.aac', '.aiff', '.caf', '.m4a', '.mp3', '.wav', // Audio formats
         '.html', '.pdf', // Document formats
@@ -19,6 +19,7 @@ module.exports = {
     ],
     //圖片壓縮配置
     minOptions: {
+        onlyWeb:true,
         contextName: '',
         gifsicle: {
             interlaced: false
