@@ -13,7 +13,6 @@ var pxtorem = require('postcss-pxtorem');
 var isProudction = process.env.NODE_ENV === 'production'
 
 // Webpack 插件
-//var RequireImageXAssetPlugin = require('image-web-loader').RequireImageXAssetPlugin
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 var RuntimeCapturePlugin = require('./plugins/capture.js');
 var CleanWebpackPlugin = require('clean-webpack-plugin')
@@ -69,18 +68,17 @@ module.exports = {
     output: {
         path: config.releaseDir,
         filename: '[name].js',
-        chunkFilename: '[name]',
+        chunkFilename: '[name].js',
         publicPath: config.publicPath
     },
     plugins: [
-        //new RequireImageXAssetPlugin(),
         new webpack.DefinePlugin({
             'process.env': { NODE_ENV: JSON.stringify(isProudction ? 'production' : 'development') }
         }),
         new ProgressBarPlugin(),
         new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
         new RuntimeCapturePlugin(),
-        new CodeSpliterPlugin(isProudction ? config.releaseDir : null),
+        new CodeSpliterPlugin(isProudction ? config.releaseDir : null,false),
         new webpack.optimize.CommonsChunkPlugin('app'),
         new webpack.NoEmitOnErrorsPlugin(),
     ].concat(isProudction ? proPlugins : devPlugins),

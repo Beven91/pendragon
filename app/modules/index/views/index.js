@@ -1,18 +1,23 @@
 import "./index.css";
 import React from 'react'
 import Component from '../../../components/base';
-import { Flex,View,Text } from 'antd-mobile';
+import { Flex,View,Text,Button } from 'antd-mobile';
 
 class IndexScreen extends Component {
 
   constructor(props) {
     super(props)
     this.navigate = this.props.navigation.navigate.bind(this.props.navigation)
+    this.gotoLogin =  this.gotoLogin.bind(this);
   }
 
   componentDidMount(){
     clearTimeout(this.timer);
-    this.timer =  setTimeout(()=>this.forward('Login'),1500);
+    //this.timer =  setTimeout(()=>this.forward('Login'),1500);
+  }
+
+  gotoLogin(){
+    this.forward('Login');
   }
 
   /**
@@ -22,6 +27,7 @@ class IndexScreen extends Component {
     return (
       <Flex className="splash-screen">
         <Flex.Item className="logo">
+          <Button onClick={this.gotoLogin} >登录</Button>
           <Text>Pendragon</Text>
         </Flex.Item>
       </Flex>

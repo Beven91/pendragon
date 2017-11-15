@@ -27,6 +27,8 @@ app.use(webpackDevMiddleware(compiler, {
 // 添加webpack热部署中间件到app中
 app.use(webpackHotMiddleware(compiler))
 
+app.use(express.static(path.resolve('dist')));
+
 app.use(function (req, resp, next) {
     resp.sendFile(path.resolve('index.html'));
 })
