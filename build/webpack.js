@@ -126,7 +126,10 @@ module.exports = {
                         options: config.minOptions
                     },
                     {
-                        loader: 'file-loader'
+                        loader: 'file-loader',
+                        options:{
+                            name:'./images/[hash].[ext]'
+                        }
                     }
                 ]
             },
