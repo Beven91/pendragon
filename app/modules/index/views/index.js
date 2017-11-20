@@ -13,6 +13,7 @@ class IndexScreen extends Component {
 
   componentDidMount(){
     clearTimeout(this.timer);
+    this.showLoading('s',1000000);
     //this.timer =  setTimeout(()=>this.forward('Login'),1500);
   }
 
