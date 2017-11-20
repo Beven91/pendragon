@@ -12,7 +12,10 @@ import BJ_REPORT from "./bj-report-tryjs.min";
 class Saber {
 
   static initReport() {
-    window.onWebpackRequireErrorCapture = (error) => BJ_REPORT.report(error);
+    window.onWebpackRequireErrorCapture = (error) =>{
+      console.error(error);
+      BJ_REPORT.report(error);
+    } 
     BJ_REPORT.init({
       //上报 id, 不指定 id 将不上报
       id: 1,

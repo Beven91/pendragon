@@ -39,6 +39,7 @@ export default class StackAnimateView extends React.PureComponent {
      * 播放动画页面进入动画
      */
     transitionAnimations() {
+        console.log(this.state.lastChildren);
         if (this.state.lastChildren) {
             const { current, prev } = this.refs;
             const activeCls = this.props.isForward ? 'forward' : 'back';
