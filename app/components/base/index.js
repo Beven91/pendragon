@@ -10,8 +10,9 @@ import './base.css';
 import Validator from '../validation';
 import React from 'react'
 import PropTypes from 'prop-types';
+import Preload from '../preload'
 import WechatService from '../../api/wechat.service';
-import { Modal, Toast } from 'antd-mobile';
+import { Modal } from 'antd-mobile';
 import wx from '../wechat';
 import dantejs from 'dantejs';
 
@@ -94,10 +95,16 @@ export default class Base extends React.PureComponent {
   /**
    * 显示悬浮的Loading效果
    * @param {String} message loading效果显示的文案 默认为：请稍后...
-   * @param {Number} duration loaing效果显示时长 默认 1秒 单位：秒
    */
-  showLoading(message, duration = 1) {
-    Toast.loading(message, duration)
+  showLoading(message) {
+    return Preload.showLoading(message);
+  }
+
+  /**
+   * 关闭loading效果
+   */
+  closeLoading(){
+    return Preload.closeLoading();
   }
 
   /**

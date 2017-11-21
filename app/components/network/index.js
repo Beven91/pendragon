@@ -6,7 +6,7 @@
 
 //引入fetch polyfill
 import 'whatwg-fetch';
-import { Toast } from 'antd-mobile';
+import Preload from '../preload';
 import { EventEmitter } from 'dantejs'
 
 let Options = {};
@@ -122,8 +122,16 @@ class AttachResponse {
      * @param {Function} error  请求失败响应函数
      * @returns this self
      */
-    then(...params) {
-        this.promise = this.promise.then(...params);
+    then(success, error) {
+        const errorWrapper = (result) => {
+            if (typeof error === 'function') {
+                return error(result);
+            } else {
+                emitter.emit('error', result);
+                return result;
+            }
+        }
+        this.promise = this.promise.then(success, errorWrapper);
         return this;
     }
 
@@ -145,8 +153,18 @@ class AttachResponse {
      */
     showLoading(message, duration = 1) {
         if (typeof Options.loading === 'function') {
-            Options.loading(message, duration);
+            this.complete(Options.loading(message, duration))
         }
+        return this;
+    }
+
+    /**
+     * 回调处理，不管是成功还是失败，都出发该回调
+     * @param  {Function} callback 回调函数
+     */
+    complete(callback) {
+        const onlyCallback = (context) => { callback(); return context; }
+        this.then(onlyCallback, onlyCallback);
         return this;
     }
 
@@ -154,7 +172,7 @@ class AttachResponse {
      * 设定返回json数据
      */
     json() {
-        return this.then((response) => { response.json() });
+        return this.then((response) => response.json());
     }
 
     /**

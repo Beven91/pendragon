@@ -1,9 +1,9 @@
-import './style.css';
+import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-export default class Preload {
+export default class Preload extends React.PureComponent {
 
     constructor(props) {
         super(props);
@@ -15,6 +15,7 @@ export default class Preload {
      */
     static showLoading(message) {
         ReactDOM.render(<Preload message={message} />, this._getContainer())
+        return this.closeLoading.bind(this);
     }
 
     /**
@@ -70,7 +71,7 @@ export default class Preload {
                                 <div className="am-toast-text-info">{message}</div>
                             </div>
                         </div>
-                        <a tabindex="0" className="am-toast-notice-close">
+                        <a tabIndex="0" className="am-toast-notice-close">
                             <span className="am-toast-notice-close-x"></span>
                         </a>
                     </div>

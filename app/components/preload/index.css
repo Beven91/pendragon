@@ -1,0 +1,18 @@
+.am-toast .am-icon-loading  {
+    margin:0px auto;
+    background-size:100%;
+    animation:none;
+}
+
+.am-toast .am-icon-loading.white{
+    background-image:url('./images/white.gif');
+}
+  
+.am-toast .am-icon-loading.blue{
+    background-image:url('./images/blue.gif');
+}
+  
+.am-toast .am-icon-loading.blue_36{
+    background-image:url('./images/blue_36.gif');
+}
+  

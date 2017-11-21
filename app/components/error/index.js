@@ -9,7 +9,7 @@
 import "./index.css";
 import BJ_REPORT from "./bj-report-tryjs.min";
 
-class Saber {
+export default class Saber {
 
   static initReport() {
     window.onWebpackRequireErrorCapture = (error) =>{
@@ -54,6 +54,10 @@ class Saber {
     element.className = "error";
     element.innerHTML = `<span class="error-icon">ERROR</span>${(error || {}).stack}`;
     overlay.appendChild(element);
+  }
+
+  static onCat(error){
+    console.error(error);
   }
 }
 
