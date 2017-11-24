@@ -7,7 +7,8 @@
 //引入fetch polyfill
 import 'whatwg-fetch';
 import Preload from '../preload';
-import { EventEmitter } from 'dantejs'
+import qs from 'qs';
+import dantejs, { Type, EventEmitter } from 'dantejs'
 
 let Options = {};
 //创建一个事件容器
@@ -40,7 +41,7 @@ export default class Network {
     }
 
     /**
-     * 发送一个post请求
+     * 发送一个get请求
      * @param {String} uri 服务端接口url 可以为完整路径或者相对路径
      * 完整路径例如: https://api.pendragon/rest/order/submit
      * 相对路径： 相对路径是相对于 Network.config() 配置的 baseUri
@@ -52,7 +53,7 @@ export default class Network {
     }
 
     /**
-     * 发送一个get请求
+     * 发送一个post请求
      * @param {String} uri 服务端接口url 可以为完整路径或者相对路径
      * 完整路径例如: https://api.pendragon/rest/order/submit
      * 相对路径： 相对路径是相对于 Network.config() 配置的 baseUri
@@ -81,8 +82,9 @@ export default class Network {
             //默认设置成同源模式 需要发送cookie到服务端
             credentials: 'same-origin',
             //请求首部
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+            headers: headers = {
+                'X-P': 'fetch',
+                'Content-Type': Options.defaultContentType || 'application/x-www-form-urlencoded',
                 //合并传入的headers 传入的headers会覆盖前面行配置的默认headers
                 ...headers,
             },
@@ -193,7 +195,7 @@ function adapter(data, headers) {
     data = merge(data, Options.data);
     headers = headers || {};
     //默认content-type为 
-    let ct = headers['Content-Type'] || Options.defaultContentType || 'application/x-www-form-urlencoded';
+    let ct = headers['Content-Type'];
     switch (ct) {
         case 'application/json':
             return JSON.stringify(data);
@@ -213,7 +215,7 @@ function adapter(data, headers) {
 function merge(data, merge) {
     data = data || {};
     merge = merge || {};
-    if (data instanceof FormData) {
+    if (!data instanceof FormData) {
         return { ...merge, ...data };
     }
     Object.keys(merge).forEach((k) => {
@@ -248,13 +250,7 @@ function combine(uri, method, data) {
  */
 function formdata(data = {}) {
     if (!(data instanceof FormData)) {
-        let fd = new FormData();
-        Object
-            .keys(data)
-            .forEach((k) => {
-                fd.append(k, data[k]);
-            })
-        data = fd;
+        return qs.stringify(data);
     }
     return data;
 }

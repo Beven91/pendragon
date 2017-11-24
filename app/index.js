@@ -16,8 +16,7 @@ const SHORT = 2;
 Network.config({
   baseUri: config.baseUri,
   data: {},
-  loading: Preload.showLoading.bind(Preload),
-  defaultContentType: 'application/json'
+  loading: Preload.showLoading.bind(Preload)
 })
 // 全局接口异常提示
 Network.on('error', (error) => { Saber.onCat(error), Toast.fail('哎呀，网络请求异常啦，请稍候再试试...', SHORT) })
