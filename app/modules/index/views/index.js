@@ -1,6 +1,7 @@
 import "./index.css";
 import React from 'react'
 import Component from '../../../components/base';
+import CountdownButton from '../../../components/countdown'
 import { Flex,View,Text,Button } from 'antd-mobile';
 
 class IndexScreen extends Component {
@@ -12,13 +13,10 @@ class IndexScreen extends Component {
   }
 
   componentDidMount(){
-    clearTimeout(this.timer);
-    this.showLoading('s',1000000);
-    //this.timer =  setTimeout(()=>this.forward('Login'),1500);
   }
 
   gotoLogin(){
-    this.forward('Login');
+   // this.forward('Login');
   }
 
   /**
@@ -28,7 +26,7 @@ class IndexScreen extends Component {
     return (
       <Flex className="splash-screen">
         <Flex.Item className="logo">
-          <Button onClick={this.gotoLogin} >登录</Button>
+          <CountdownButton format="{0}秒后重新发送"  onClick={this.gotoLogin} >登录</CountdownButton>
           <Text>Pendragon</Text>
         </Flex.Item>
       </Flex>

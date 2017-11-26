@@ -122,10 +122,6 @@ module.exports = {
                 test: /\.(png|jpg|jpeg|gif|webp|bmp|ico|jpeg)$/,
                 loader: [
                     {
-                        loader: 'image-web-loader',
-                        options: config.minOptions
-                    },
-                    {
                         loader: 'file-loader',
                         options:{
                             name:'./images/[hash].[ext]'
