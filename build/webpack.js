@@ -15,6 +15,7 @@ var isProudction = process.env.NODE_ENV === 'production'
 // Webpack 插件
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 var RuntimeCapturePlugin = require('./plugins/capture.js');
+var AssetsPlugin  =require('./plugins/assets');
 var CleanWebpackPlugin = require('clean-webpack-plugin')
 var ProgressBarPlugin = require('progress-bar-webpack-plugin')
 var CodeSpliterPlugin = require('webpack-code-spliter').CodeSpliterPlugin;
@@ -34,6 +35,7 @@ var proPlugins = [
         analyzerMode: 'static',
         openAnalyzer: false
     }),
+    new AssetsPlugin(),
     new webpack.optimize.UglifyJsPlugin({
         compressor: {
             warnings: false

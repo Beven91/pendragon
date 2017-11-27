@@ -19,7 +19,7 @@ module.exports = {
     ],
     //圖片壓縮配置
     minOptions: {
-        onlyWeb:true,
+        onlyWeb: true,
         contextName: '',
         gifsicle: {
             interlaced: false

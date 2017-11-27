@@ -9,6 +9,7 @@ class IndexScreen extends Component {
     super(props)
     this.navigate = this.props.navigation.navigate.bind(this.props.navigation)
     this.gotoLogin =  this.gotoLogin.bind(this);
+    console.log(this.getUrlParams());
   }
 
   componentDidMount(){
