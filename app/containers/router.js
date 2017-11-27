@@ -4,7 +4,7 @@ module.exports = (modules) => {
   return StackNavigator({
 
     Root: {
-      path: '',
+      path: process.env.NODE_ENV === 'production' ? '' : '',
       screen: StackNavigator({
         Index: {
           screen: modules.Index,

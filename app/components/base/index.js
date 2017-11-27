@@ -39,6 +39,13 @@ export default class Base extends React.PureComponent {
   }
 
   /**
+   * 获取当url的参数
+   */
+  getUrlParams(){
+    return new  dantejs.UrlParser(location.href).paras;
+  }
+
+  /**
    * 校验指定model数据是否填写符合规范
    * @param {Object} data 要校验的数据
    * @param {Object} partten 校验规则 例如:

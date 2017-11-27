@@ -11,6 +11,8 @@ var childProcess = require('child_process')
 var express = require('express')
 var webpack = require('webpack')
 var proxyPool = require('./proxy');
+var ejs = require('ejs');
+var AssetsPlugin = require('./build/plugins/assets');
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
 
@@ -48,9 +50,13 @@ app.use((req, resp, next) => {
 //设置静态目录
 app.use(express.static(path.resolve('dist')));
 
+//设置视图引擎
+app.engine('html',ejs.__express);
+app.set('views', path.join(__dirname))
+
 //设置默认返回视图
 app.use(function (req, resp, next) {
-    resp.sendFile(path.resolve('index.html'));
+    resp.render('index.html',AssetsPlugin.getIndex());
 })
 
 // 开始监听指定端口
