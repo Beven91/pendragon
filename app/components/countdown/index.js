@@ -22,7 +22,7 @@ export default class CountdownButton extends Component {
         //倒计时显示的模板
         format: PropTypes.string,
         timerCls:PropTypes.string,
-        total: 10,
+        total: PropTypes.number,
     }
 
     /**
@@ -59,8 +59,9 @@ export default class CountdownButton extends Component {
     }
 
     render() {
+        const {timerCls,...props} = this.props;
         return (
-            <Button ref="button" {...this.props} onClick={this.onClick} />
+            <Button ref="button" {...props} onClick={this.onClick} />
         )
     }
 }
