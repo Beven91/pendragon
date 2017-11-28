@@ -41,7 +41,7 @@ Archer.prototype.run = function (name) {
  * @param name {String} 业务名称
  */
 Archer.prototype.create = function (name) {
-  var dir = path.join(__dirname, '..', 'app', 'modules', name);
+  var dir = path.resolve('app/modules/'+name);
   if (!name) {
     return logger.log('请输入业务名称，例如: user/login 或者 trade ')
   } else if (fs.existsSync(dir)) {
