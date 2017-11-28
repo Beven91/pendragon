@@ -1,3 +1,3 @@
 module.exports = {
-    baseUri:'http://api.com/'
+    baseUri: ''
 }

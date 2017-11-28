@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "mocknode": "mocknode",
-    "new": "node ./cli/npm.js new",
+    "new": "node ./build/cli/npm.js new",
     "init": "npm install --registry=https://registry.npm.taobao.org",
-    "start": "node ./index.js",
-    "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.js --color",
-    "build:dev": "cross-env NODE_ENV=development webpack --config ./build/webpack.js --color"
+    "start": "node ./server/index.js",
+    "build": "cross-env NODE_ENV=production webpack --config ./build/webpack/webpack.js --color",
+    "build:dev": "cross-env NODE_ENV=development webpack --config ./build/webpack/webpack.js --color"
   },
   "author": "",
   "license": "ISC",

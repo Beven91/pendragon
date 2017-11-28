@@ -6,7 +6,7 @@
 var fs = require('fs');
 var path = require('path');
 var ejs = require('ejs');
-var config = require('../../.package.js');
+var config = require('../../../.package.js');
 
 /**
  * 插件构造函数

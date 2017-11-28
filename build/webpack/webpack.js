@@ -5,7 +5,7 @@
 
 var path = require('path')
 var webpack = require('webpack')
-var config = require('../.package');
+var config = require('../../.package');
 var autoprefixer = require('autoprefixer');
 var pxtorem = require('postcss-pxtorem');
 
