@@ -55,10 +55,6 @@ export default class Saber {
     element.innerHTML = `<span class="error-icon">ERROR</span>${(error || {}).stack}`;
     overlay.appendChild(element);
   }
-
-  static onCat(error){
-    console.error(error);
-  }
 }
 
 Saber.initReport();

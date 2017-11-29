@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import Preload from '../preload'
 import WechatService from '../../api/wechat.service';
 import { Modal } from 'antd-mobile';
-import wx from '../wechat';
+import '../wechat';
 import dantejs from 'dantejs';
 
 const service = new WechatService();
