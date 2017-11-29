@@ -9,23 +9,7 @@ class IndexScreen extends Component {
     super(props)
     this.navigate = this.props.navigation.navigate.bind(this.props.navigation)
     this.gotoLogin =  this.gotoLogin.bind(this);
-    //Toast.show("你好",10000000);
-      //如果使用微信分享
-    this.connectionWechat(['onMenuShareTimeline']);
   }
-
-   //微信相关操作
-   onWechatConnection(wx) {
-    //前提：使用了 this.connectionWechat 
-    //使用了this.connectionWechat  后触发当前函数
-    const share = {
-        title: '送您一张...卡',
-        desc: '...',
-        link: 'https://s.com/xxx',
-        imgUrl: this.shareLogoUrl
-    }
-    wx.onMenuShareTimeline(share);
-}
 
   componentDidMount(){
   }

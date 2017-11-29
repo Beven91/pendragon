@@ -5,6 +5,8 @@ import Navigation, { NavigationActions, addNavigationHelpers } from 'react-navig
 import RouterView from './router';
 import NavigateHelper from './forward';
 
+let pathExtension = '';
+
 class StackNavigator extends Component {
 
     static childContextTypes = {
@@ -121,9 +123,30 @@ class StackNavigator extends Component {
 
 Navigation.StackNavigator = (routeConfigs, stackConfig) => {
     let { TabRouter, createNavigator } = Navigation;
-    let navigator = createNavigator(TabRouter(routeConfigs, stackConfig))(StackNavigator);
+    let navigator = createNavigator(TabRouter(handlePathExtensions(routeConfigs), stackConfig))(StackNavigator);
     navigator.initialRouteName = window.location.pathname;
     return navigator;
+}
+
+/**
+ * 设置路由后缀 例如设置成.html  那么所有路由path默认会拼接.html 例如: path:'login' 那么可以 login.html
+ * @param {String} extension 后缀名 
+ */
+Navigation.StackNavigator.setPathExtension = function (extension) {
+    pathExtension = extension;
+}
+
+function handlePathExtensions(routeConfigs) {
+    const extension = pathExtension;
+    if (extension) {
+        Object.keys(routeConfigs).map((k) => {
+            const route = routeConfigs[k];
+            if (route.path && !route.rest) {
+                route.path = route.path + extension;
+            }
+        })
+    }
+    return routeConfigs;
 }
 
 module.exports = Navigation;
