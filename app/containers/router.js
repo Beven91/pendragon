@@ -1,10 +1,10 @@
 import { StackNavigator } from 'hanzojs/router'
 
 module.exports = (modules) => {
-  StackNavigator.setPathExtension('.html');
+  StackNavigator.setPathExtension('.html',process.env.NODE_ENV === 'production' ? 'web/weixin' : '');
   return StackNavigator({
     Root: {
-      path: process.env.NODE_ENV === 'production' ? 'weixin/web' : 'ss',
+      path: '',
       rest:true,
       screen: StackNavigator({
         Index: {

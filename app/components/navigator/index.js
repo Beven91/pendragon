@@ -5,7 +5,9 @@ import Navigation, { NavigationActions, addNavigationHelpers } from 'react-navig
 import RouterView from './router';
 import NavigateHelper from './forward';
 
-let pathExtension = '';
+let PATHEXTENSION = '';
+let PATHROOT = '';
+const LOCATIONPATHNAME = window.location.pathname.toLowerCase();
 
 class StackNavigator extends Component {
 
@@ -18,10 +20,10 @@ class StackNavigator extends Component {
     constructor(props) {
         super(props);
         const { router } = this.props;
-        const path = window.location.pathname;
+        const path = getWebPath();
         const initAction = this.getAction(router, path, { path });
         this.dispatch = this.dispatch.bind(this);
-        this.state = router.getStateForAction(initAction);
+        this.state = props.navigation.state;
         this.getActionForPathAndParams = this.getActionForPathAndParams.bind(this);
         this.getURIForAction = this.getURIForAction.bind(this);
         NavigateHelper.initRoute();
@@ -69,8 +71,7 @@ class StackNavigator extends Component {
     getURIForAction(action) {
         const { router } = this.props;
         const state = router.getStateForAction(action, this.state) || this.state;
-        const { path } = router.getPathAndParamsForState(state);
-        return `/${path}`;
+        return this.getURI(state);
     }
 
     getActionForPathAndParams(path, params) {
@@ -85,22 +86,27 @@ class StackNavigator extends Component {
         };
     }
 
+    getURI(state) {
+        const { router } = this.props;
+        const { path, params } = router.getPathAndParamsForState(state);
+        const maybeHash = params && params.hash ? `#${params.hash}` : '';
+        const webRoot = PATHROOT ? PATHROOT + '/' : '';
+        return `/${webRoot}${path}${maybeHash}`.toLowerCase();
+    }
+
     componentDidMount() {
         const { router } = this.props;
         window.onpopstate = e => {
             e.preventDefault();
-            const action = this.getAction(router, window.location.pathname.substr(1));
+            const action = this.getAction(router, LOCATIONPATHNAME.substr(1));
             action.fromPopstate = true;
             if (action) this.dispatch(action);
         };
     }
 
     componentWillUpdate(props, state) {
-        const { router } = this.props;
-        const { path, params } = router.getPathAndParamsForState(state);
-        const maybeHash = params && params.hash ? `#${params.hash}` : '';
-        const uri = `/${path}${maybeHash}`;
-        if (window.location.pathname !== uri) {
+        const uri = this.getURI(state);
+        if (LOCATIONPATHNAME !== uri) {
             const id = NavigateHelper.genStateID();
             window.history.pushState({ id }, state.title, uri);
         }
@@ -124,20 +130,39 @@ class StackNavigator extends Component {
 Navigation.StackNavigator = (routeConfigs, stackConfig) => {
     let { TabRouter, createNavigator } = Navigation;
     let navigator = createNavigator(TabRouter(handlePathExtensions(routeConfigs), stackConfig))(StackNavigator);
-    navigator.initialRouteName = window.location.pathname;
+    navigator.initialRouteName = getWebPath();
     return navigator;
 }
 
 /**
  * 设置路由后缀 例如设置成.html  那么所有路由path默认会拼接.html 例如: path:'login' 那么可以 login.html
  * @param {String} extension 后缀名 
+ * @param {String} rootPath 默认路由根部分 例如  web/order
  */
-Navigation.StackNavigator.setPathExtension = function (extension) {
-    pathExtension = extension;
+Navigation.StackNavigator.setPathExtension = function (extension, rootPath = '') {
+    PATHEXTENSION = extension;
+    PATHROOT = rootPath;
 }
 
+/**
+ * 获取当前路由pathname
+ */
+function getWebPath() {
+    const pathname = LOCATIONPATHNAME;
+    const pathRoot = PATHROOT;
+    if (pathRoot) {
+        return pathname.substr(pathname.indexOf(pathRoot) + pathRoot.length);
+    } else {
+        return pathname;
+    }
+}
+
+/**
+ * 处理路由path后缀
+ * @param {*} routeConfigs 
+ */
 function handlePathExtensions(routeConfigs) {
-    const extension = pathExtension;
+    const extension = PATHEXTENSION;
     if (extension) {
         Object.keys(routeConfigs).map((k) => {
             const route = routeConfigs[k];

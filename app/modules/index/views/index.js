@@ -25,7 +25,7 @@ class IndexScreen extends Component {
     return (
       <Flex className="splash-screen">
         <Flex.Item className="logo">
-          <CountdownButton format="{0}秒后重新发送" total={5} timerCls="disabled" onClick={this.gotoLogin} >登录</CountdownButton>
+          <Button onClick={this.gotoLogin} >登录</Button>
           <Text>Pendragon</Text>
         </Flex.Item>
       </Flex>

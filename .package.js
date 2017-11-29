@@ -4,7 +4,7 @@ var fs = require('fs');
 
 module.exports = {
     //网站访问路径前缀 例如 /static
-    publicPath: '',
+    publicPath: '/',
     //打包发布的目标目录
     releaseDir: path.resolve('dist'),
     //入口文件
