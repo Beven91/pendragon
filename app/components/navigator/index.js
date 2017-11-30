@@ -7,7 +7,6 @@ import NavigateHelper from './forward';
 
 let PATHEXTENSION = '';
 let PATHROOT = '';
-const LOCATIONPATHNAME = window.location.pathname.toLowerCase();
 
 class StackNavigator extends Component {
 
@@ -98,7 +97,7 @@ class StackNavigator extends Component {
         const { router } = this.props;
         window.onpopstate = e => {
             e.preventDefault();
-            const action = this.getAction(router, window.location.pathname.toLowerCase().substr(1));
+            const action = this.getAction(router, getLocationPath().substr(1));
             action.fromPopstate = true;
             if (action) this.dispatch(action);
         };
@@ -106,7 +105,7 @@ class StackNavigator extends Component {
 
     componentWillUpdate(props, state) {
         const uri = this.getURI(state);
-        if (LOCATIONPATHNAME !== uri) {
+        if (getLocationPath() !== uri) {
             const id = NavigateHelper.genStateID();
             window.history.pushState({ id }, state.title, uri);
         }
@@ -148,7 +147,7 @@ Navigation.StackNavigator.setPathExtension = function (extension, rootPath = '')
  * 获取当前路由pathname
  */
 function getWebPath() {
-    const pathname = LOCATIONPATHNAME;
+    const pathname = getLocationPath();
     const pathRoot = PATHROOT;
     if (pathRoot) {
         return pathname.substr(pathname.indexOf(pathRoot) + pathRoot.length);
@@ -172,6 +171,13 @@ function handlePathExtensions(routeConfigs) {
         })
     }
     return routeConfigs;
+}
+
+/**
+ * 获取当前location.pathname
+ */
+function getLocationPath(){
+    return window.location.pathname.toLowerCase();
 }
 
 module.exports = Navigation;
