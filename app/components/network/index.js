@@ -89,7 +89,7 @@ export default class Network {
                 ...headers,
             },
             //请求正文
-            body: adapter(data, headers)
+            body: adapter(data, headers, method)
         }).then((response) => {
             const { status } = response;
             emitter.emit('end', response);
@@ -190,20 +190,23 @@ class AttachResponse {
  * 根据请求报文的ContentType来适配发送正文的形态
  * @param {Object} data 发送的数据
  * @param {Object} headers 请求首部
+ * @param {String} method 请求类型
  */
-function adapter(data, headers) {
-    data = merge(data, Options.data);
-    headers = headers || {};
-    //默认content-type为 
-    let ct = headers['Content-Type'];
-    switch (ct) {
-        case 'application/json':
-            return JSON.stringify(data);
-        case 'application/x-www-form-urlencoded':
-            return formdata(data);
-        default:
-            //其他类型，默认直接范围原始data
-            return data;
+function adapter(data, headers, method) {
+    if (['get', 'head'].indexOf(method.toLowerCase()) < 0) {
+        data = merge(data, Options.data);
+        headers = headers || {};
+        //默认content-type为 
+        let ct = headers['Content-Type'];
+        switch (ct) {
+            case 'application/json':
+                return JSON.stringify(data);
+            case 'application/x-www-form-urlencoded':
+                return formdata(data);
+            default:
+                //其他类型，默认直接范围原始data
+                return data;
+        }
     }
 }
 
@@ -237,10 +240,9 @@ function combine(uri, method, data) {
         uri = Options.baseUri + uri;
     }
     const isGet = method === "Get";
-    const search = isGet ? Object.keys(data).map((k) => k + '=' + data[k]) : [];
+    const search = isGet ? qs.stringify(data) : '';
     const char = uri.indexOf('?') > -1 ? '&' : '?';
-    return search.length > 0 ? uri + char + search.join('&') : uri;
-
+    return search.length > 0 ? uri + char + search : uri;
 }
 
 /**
