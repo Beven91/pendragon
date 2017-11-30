@@ -97,7 +97,7 @@ class StackNavigator extends Component {
         const { router } = this.props;
         window.onpopstate = e => {
             e.preventDefault();
-            const action = this.getAction(router, getLocationPath().substr(1));
+            const action = this.getAction(router, getWebPath().substr(1));
             action.fromPopstate = true;
             if (action) this.dispatch(action);
         };
