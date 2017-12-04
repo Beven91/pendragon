@@ -17,7 +17,13 @@ import '../wechat';
 import dantejs from 'dantejs';
 
 const service = new WechatService();
-let isWechatConnetion = false;
+
+//原始location.href
+const ORIGINAL_HREF = location.href;
+//判断当前环境是否为ios
+const IOS = /\(i[^;]+;( U;)? CPU.+Mac OS X/.test(navigator.userAgent);
+//链接成功次数
+let connectionOKCount = 0;
 
 export default class Base extends React.PureComponent {
 
@@ -41,8 +47,8 @@ export default class Base extends React.PureComponent {
   /**
    * 获取当url的参数
    */
-  getUrlParams(){
-    return new  dantejs.UrlParser(location.href).paras;
+  getUrlParams() {
+    return new dantejs.UrlParser(location.href).paras;
   }
 
   /**
@@ -110,7 +116,7 @@ export default class Base extends React.PureComponent {
   /**
    * 关闭loading效果
    */
-  closeLoading(){
+  closeLoading() {
     return Preload.closeLoading();
   }
 
@@ -145,11 +151,14 @@ export default class Base extends React.PureComponent {
    * @param apiList 需要使用的apiList 例如：['onMenuShareTimeline','...']
    */
   connectionWechat(apiList) {
-    if (isWechatConnetion) {
+    //微信在ios平台下，如果是单页应用仅需要使用原始页面url注册一次即可，
+    //android每个pushState都需要重新配置
+    if (IOS && connectionOKCount > 0) {
       return this.onWechatConnection(wx);
     }
+    const url = (IOS ? ORIGINAL_HREF : location.href).split('#')[0];
     service
-      .permission({ url: window.location.href })
+      .permission({ url: url })
       .then((data) => {
         const config = {
           debug: false,
@@ -159,11 +168,13 @@ export default class Base extends React.PureComponent {
           signature: data.signature,
           jsApiList: apiList,
         };
-        isWechatConnetion = true;
         //配置微信
         wx.config(config);
         //监听微信sdk ready事件
-        wx.ready(() => this.onWechatConnection(wx));
+        wx.ready(() => {
+          connectionOKCount++;
+          this.onWechatConnection(wx)
+        });
       })
   }
 
