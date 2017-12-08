@@ -110,6 +110,7 @@ export default class StackAnimateView extends React.Component {
             this.bindAnimationEnd(activedDOM, () => {
                 this.isAnimating = false;
                 activedDOM.classList.add("backface")
+                activingDOM.classList.remove('backface');
             })
             this.setState({ activedScreen: activingScreen, activingScreen: null })
         }
