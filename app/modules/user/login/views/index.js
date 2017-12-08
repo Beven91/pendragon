@@ -44,6 +44,7 @@ class UserLoginScreen extends Component {
    * 渲染组件
    */
   render() {
+    console.log('Render Login........');
     return (
       <Layout>
         <View className="login-screen">

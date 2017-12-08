@@ -23,7 +23,7 @@ module.exports = (modules) => {
         },
         Home: {
           screen: modules.Home,
-          path: 'index',
+          path: 'home',
           navigationOptions: {
             title: '首页'
           }

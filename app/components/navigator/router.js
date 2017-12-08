@@ -141,7 +141,7 @@ export default class DynamicComponentNavView extends React.Component {
     }
   }
 
-  empty(){
+  empty() {
     return (<div></div>)
   }
 
@@ -149,15 +149,19 @@ export default class DynamicComponentNavView extends React.Component {
    * 组件渲染
    */
   render() {
-    const Component = this.state.requiredComponent || this.empty;
-    const { navigation, router, isForward } = this.props;
+    const Component = this.state.requiredComponent;
+    const { navigation, router, isForward, pathName } = this.props;
     const state = navigation.state;
     const { path } = router.getPathAndParamsForState(state);
     const forward = isForward || false;
-    return (
-      <StackAnimateView route={path} isForward={forward}>
-        <Component navigation={navigation} />
-      </StackAnimateView>
-    );
+    if (Component) {
+      return (
+        <StackAnimateView route={pathName} isForward={forward}>
+          <Component navigation={navigation} />
+        </StackAnimateView>
+      );
+    } else {
+      return '';
+    }
   }
 }

@@ -25,7 +25,13 @@ html,
     left:0px;
 }
 
+
+.pages .page.backface{
+    display:none !important;
+}
+
 .pages .page.forward.active{
+    z-index:99;
     animation:activeIn .4s ease;
 }
 

@@ -118,10 +118,11 @@ class StackNavigator extends Component {
     render() {
         const { router } = this.props;
         const navigation = this.getNavigation();
-        const Screen = router.getComponentForState(this.state);
+        const { state } = navigation;
+        const pathName = this.getURI(state);
         const isForward = NavigateHelper.isForward(this.state.popstate || this.state.isBack)
         return (
-            <RouterView navigation={navigation} router={router} isForward={isForward} />
+            <RouterView navigation={navigation} pathName={pathName} router={router} isForward={isForward} />
         )
     }
 }
@@ -176,7 +177,7 @@ function handlePathExtensions(routeConfigs) {
 /**
  * 获取当前location.pathname
  */
-function getLocationPath(){
+function getLocationPath() {
     return window.location.pathname.toLowerCase();
 }
 

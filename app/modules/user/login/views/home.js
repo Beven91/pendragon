@@ -26,6 +26,7 @@ export default class HomeScreen extends Component {
     }
 
     render() {
+        console.log('Render Home........');
         const { params } = this.props.navigation.state
         return (
             <Layout>
