@@ -22,7 +22,6 @@ class IndexScreen extends Component {
    * 渲染组件
    */
   render() {
-    console.log('Render Index........');
     return (
       <Flex className="splash-screen">
         <Flex.Item className="logo">

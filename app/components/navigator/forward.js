@@ -22,7 +22,7 @@ export default class NavigateHelper {
 
     static initRoute() {
         const history = window.history;
-        const state = history.state;
+        const state = history.state || {};
         const id = (state && state.id > 0) ? state.id : this.genStateID();
         this.setCurrentStateID(id);
         if (!state) {
@@ -32,7 +32,7 @@ export default class NavigateHelper {
 
     static isForward(ispopstate) {
         const history = window.history;
-        const state = history.state;
+        const state = history.state || {};
         const isThan  = (state && state.id > this.getCurrentStateID());
         return isThan || (!ispopstate);
     }

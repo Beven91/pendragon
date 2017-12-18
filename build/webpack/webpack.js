@@ -75,7 +75,10 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': { NODE_ENV: JSON.stringify(isProudction ? 'production' : 'development') }
+            'process.env': { 
+                NODE_ENV: JSON.stringify(isProudction ? 'production' : 'development'),
+                RUN_ENV:JSON.stringify(process.env.RUN_ENV || "development")
+            }
         }),
         new ProgressBarPlugin(),
         new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),

@@ -112,7 +112,7 @@ class StackNavigator extends Component {
     }
 
     componentDidUpdate() {
-        NavigateHelper.setCurrentStateID(window.history.state.id);
+        NavigateHelper.setCurrentStateID((window.history.state || {}).id);
     }
 
     render() {
@@ -150,8 +150,9 @@ Navigation.StackNavigator.setPathExtension = function (extension, rootPath = '')
 function getWebPath() {
     const pathname = getLocationPath();
     const pathRoot = PATHROOT;
-    if (pathRoot) {
-        return pathname.substr(pathname.indexOf(pathRoot) + pathRoot.length);
+    const pathRootIndex = pathname.indexOf(pathRoot);
+    if (pathRootIndex > -1) {
+        return pathname.substr(pathRootIndex + pathRoot.length);
     } else {
         return pathname;
     }
