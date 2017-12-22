@@ -15,7 +15,7 @@ var isProudction = process.env.NODE_ENV === 'production'
 // Webpack 插件
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 var RuntimeCapturePlugin = require('./plugins/capture.js');
-var AssetsPlugin  =require('./plugins/assets');
+var AssetsPlugin = require('./plugins/assets');
 var CleanWebpackPlugin = require('clean-webpack-plugin')
 var ProgressBarPlugin = require('progress-bar-webpack-plugin')
 var CodeSpliterPlugin = require('webpack-code-spliter').CodeSpliterPlugin;
@@ -75,15 +75,15 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': { 
+            'process.env': {
                 NODE_ENV: JSON.stringify(isProudction ? 'production' : 'development'),
-                RUN_ENV:JSON.stringify(process.env.RUN_ENV || "development")
+                RUN_ENV: JSON.stringify(process.env.RUN_ENV || "development")
             }
         }),
         new ProgressBarPlugin(),
         new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
         new RuntimeCapturePlugin(),
-        new CodeSpliterPlugin(isProudction ? config.releaseDir : null,false),
+        new CodeSpliterPlugin(isProudction ? config.releaseDir : null, false),
         new webpack.optimize.CommonsChunkPlugin('app'),
         new webpack.NoEmitOnErrorsPlugin(),
     ].concat(isProudction ? proPlugins : devPlugins),
@@ -127,9 +127,13 @@ module.exports = {
                 test: /\.(png|jpg|jpeg|gif|webp|bmp|ico|jpeg)$/,
                 loader: [
                     {
+                        loader: 'image-web-loader',
+                        options: config.minOptions
+                    },
+                    {
                         loader: 'file-loader',
-                        options:{
-                            name:'./images/[hash].[ext]'
+                        options: {
+                            name: './images/[hash].[ext]'
                         }
                     }
                 ]
