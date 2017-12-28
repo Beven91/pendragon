@@ -37,7 +37,7 @@ AssetsPlugin.prototype.handle = function () {
  * 编译index.html
  */
 AssetsPlugin.prototype.compileIndex = function () {
-  var index = path.resolve('index.html');
+  var index = path.resolve('server/views/index.html');
   var target = path.resolve(config.releaseDir, 'index.html');
   this.compile(index, target, AssetsPlugin.getIndex());
 }
@@ -64,7 +64,7 @@ AssetsPlugin.getIndex = function (isReturnContent) {
 AssetsPlugin.prototype.compile = function (file, target, data, isReturnContent) {
   var innerHTML = String(fs.readFileSync(file));
   var dir = path.dirname(target);
-  innerHTML = ejs.compile(innerHTML, data)
+  innerHTML = ejs.compile(innerHTML)(data);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }

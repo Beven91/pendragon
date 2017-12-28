@@ -8,15 +8,16 @@
     "new": "node ./build/cli/npm.js new",
     "init": "npm install --registry=https://registry.npm.taobao.org",
     "start": "node ./server/index.js",
-    "webpack":"",
+    "webpack": "",
     "build": "cross-env RUN_ENV=production NODE_ENV=production webpack --config ./build/webpack/webpack.js --color",
     "build:test": "cross-env RUN_ENV=test NODE_ENV=production webpack --config ./build/webpack/webpack.js --color",
-    "build:dev": "cross-env RUN_ENV=development NODE_ENV=development webpack --config ./build/webpack/webpack.js --color"    
+    "build:dev": "cross-env RUN_ENV=development NODE_ENV=development webpack --config ./build/webpack/webpack.js --color"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "antd-mobile": "^2.0.3",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "dantejs": "^1.1.15",
     "hanzojs-follower": "^1.0.5",

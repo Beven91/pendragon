@@ -4,7 +4,7 @@ var fs = require('fs');
 
 module.exports = {
     //网站访问路径前缀 例如 /static
-    publicPath: '/',
+    publicPath: '',
     //打包发布的目标目录
     releaseDir: path.resolve('dist'),
     //入口文件
@@ -40,6 +40,7 @@ module.exports = {
     babelrc: {
         presets: ["react-native"],
         plugins: [
+            "transform-runtime",
             ["transform-react-remove-prop-types", {
                 "mode": "wrap",
                 "ignoreFilenames": ["node_modules"]

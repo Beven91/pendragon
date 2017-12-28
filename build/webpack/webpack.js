@@ -30,7 +30,7 @@ var devPlugins = [
 
 // 生产环境plugins
 var proPlugins = [
-    new CleanWebpackPlugin('**/*.*', { root: config.releaseDir }),
+    new CleanWebpackPlugin('*', { root: config.releaseDir }),
     new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         openAnalyzer: false
@@ -51,7 +51,6 @@ module.exports = {
     stats: isProudction ? 'errors-only' : 'detailed',
     entry: {
         app: [
-            'babel-polyfill',
             'react',
             'react-dom',
             'react-navigation',
@@ -101,7 +100,11 @@ module.exports = {
                         }
                     }
                 ],
-                exclude: []
+                exclude: [
+                    /baebl/,
+                    /babel-/,
+                    /core-js/
+                ]
             },
             {
                 // jsx 以及js
