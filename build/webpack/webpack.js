@@ -51,6 +51,7 @@ module.exports = {
     stats: isProudction ? 'errors-only' : 'detailed',
     entry: {
         app: [
+            'babel-polyfill',
             'react',
             'react-dom',
             'react-navigation',
