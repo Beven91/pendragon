@@ -17,7 +17,6 @@
   "license": "ISC",
   "dependencies": {
     "antd-mobile": "^2.0.3",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "dantejs": "^1.1.15",
     "hanzojs-follower": "^1.0.5",

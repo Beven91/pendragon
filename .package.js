@@ -40,7 +40,6 @@ module.exports = {
     babelrc: {
         presets: ["react-native"],
         plugins: [
-            //"transform-runtime",
             ["transform-react-remove-prop-types", {
                 "mode": "wrap",
                 "ignoreFilenames": ["node_modules"]
