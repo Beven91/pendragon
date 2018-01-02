@@ -1,6 +1,6 @@
 import "./index.css"
 import React from 'react';
-import { Base,Layout } from 'pendragon-components';
+import { Base,Layout } from 'components';
 import { View, Text, Button, InputItem } from 'antd-mobile'
 
 // 校验规则

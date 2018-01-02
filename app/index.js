@@ -1,10 +1,10 @@
-import "pendragon-components/theme/theme.css";
-import Saber from "pendragon-components/error/index";
+import "components/theme/theme.css";
+import Saber from "components/error/index";
 import React from 'react'
 import ReactDOM from 'react-dom';
 import App from './containers/app';
 import { Toast } from 'antd-mobile';
-import { Preload } from 'pendragon-components';
+import { Preload } from 'components';
 import config from '../config';
 import { Network, Validator } from 'framework';
 

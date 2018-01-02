@@ -1,5 +1,5 @@
 import React from 'react'
-import { Base,Layout } from 'pendragon-components';
+import { Base,Layout } from 'components';
 import { View } from 'antd-mobile';
 
 export default class $name$Screen extends Base {

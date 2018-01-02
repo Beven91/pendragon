@@ -1,6 +1,6 @@
 import "./index.css";
 import React from 'react'
-import { Base } from 'pendragon-components';
+import { Base } from 'components';
 import { Flex, View, Text, Button, Toast, Icon } from 'antd-mobile';
 
 class IndexScreen extends Base {
