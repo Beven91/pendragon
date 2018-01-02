@@ -1,8 +1,8 @@
 import React from 'react'
-import Component from '$rb$';
+import { Base,Layout } from 'pendragon-components';
 import { View } from 'antd-mobile';
 
-export default class $name$Screen extends Component {
+export default class $name$Screen extends Base {
 
   constructor(props) {
     super(props)

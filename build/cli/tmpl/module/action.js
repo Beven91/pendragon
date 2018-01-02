@@ -1,4 +1,4 @@
-import { $name$Service } from '$api$';
+import { $name$Service } from 'service';
 
 // const service = new $name$Service();
 
