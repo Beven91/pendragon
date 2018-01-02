@@ -32,7 +32,8 @@ export default class Base extends React.PureComponent {
   }
 
   static contextTypes = {
-    sendBeacon: PropTypes.func
+    sendBeacon: PropTypes.func,
+    navigation:PropTypes.object,
   }
 
   /**
@@ -133,17 +134,17 @@ export default class Base extends React.PureComponent {
   /**
    * 跳转到指定路由
    * @param {String} route 路由名称
-   * @param {Object} params
+   * @param {Object} params 路由参数 仅能为json对象，不能传递函数数据
    */
   forward(route, params) {
-    return this.props.navigation.navigate(route, params);
+    return this.context.navigation.navigate(route, params);
   }
 
   /**
    * 路由后退
    */
   back() {
-    return this.props.navigation.goBack();
+    return this.context.navigation.goBack();
   }
 
   /**
