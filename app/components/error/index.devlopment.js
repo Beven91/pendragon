@@ -34,9 +34,6 @@ export default class Saber {
       // 重复上报次数(对于同一个错误超过多少次不上报)  避免出现单个用户同一错误上报过多的情况
       repeat: 3,
       onReport: (id,ex) => {
-        for(var i in ex){
-          alert(i+'='+ex[i]);
-        }
         this.showReport({stack:ex.msg.split('@').join('\n@')});
       }
     });
