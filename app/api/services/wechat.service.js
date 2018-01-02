@@ -1,4 +1,4 @@
-import Service from './base';
+import { Service } from 'framework';
 
 export default class WechatService extends Service {
 

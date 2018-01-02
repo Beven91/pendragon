@@ -1,10 +1,9 @@
 import "./home.css"
 import React from 'react';
-import Component from '../../../../components/base';
-import Layout from '../../../../components/layout';
+import { Base, Layout } from 'pendragon-components';
 import { View, Flex, Text } from 'antd-mobile'; //sss
 
-export default class HomeScreen extends Component {
+export default class HomeScreen extends Base {
 
     constructor(props) {
         super(props);

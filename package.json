@@ -9,6 +9,7 @@
     "init": "npm install --registry=https://registry.npm.taobao.org",
     "start": "node ./server/index.js",
     "webpack": "",
+    "install": "npm link ./app/api/framework && npm link ./app/api/services && npm link ./app/components",
     "build": "cross-env RUN_ENV=production NODE_ENV=production webpack --config ./build/webpack/webpack.js --color",
     "build:test": "cross-env RUN_ENV=test NODE_ENV=production webpack --config ./build/webpack/webpack.js --color",
     "build:dev": "cross-env RUN_ENV=development NODE_ENV=development webpack --config ./build/webpack/webpack.js --color"

@@ -1,20 +1,20 @@
 import "./index.css";
 import React from 'react'
-import Component from '../../../components/base';
-import { Flex,View,Text,Button,Toast,Icon } from 'antd-mobile';
+import { Base } from 'pendragon-components';
+import { Flex, View, Text, Button, Toast, Icon } from 'antd-mobile';
 
-class IndexScreen extends Component {
+class IndexScreen extends Base {
 
   constructor(props) {
     super(props)
     this.navigate = this.props.navigation.navigate.bind(this.props.navigation)
-    this.gotoLogin =  this.gotoLogin.bind(this);
+    this.gotoLogin = this.gotoLogin.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
   }
 
-  gotoLogin(){
+  gotoLogin() {
     this.forward('Login');
   }
 

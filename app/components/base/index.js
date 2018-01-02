@@ -7,13 +7,13 @@
 
 // 引入依赖>>
 import './base.css';
-import Validator from '../validation';
+import '../wechat';
+import { Validator } from 'framework';
 import React from 'react'
 import PropTypes from 'prop-types';
 import Preload from '../preload'
-import WechatService from '../../api/wechat.service';
+import { WechatService } from 'services';
 import { Modal } from 'antd-mobile';
-import '../wechat';
 import dantejs from 'dantejs';
 
 const service = new WechatService();
@@ -33,7 +33,7 @@ export default class Base extends React.PureComponent {
 
   static contextTypes = {
     sendBeacon: PropTypes.func,
-    navigation:PropTypes.object,
+    navigation: PropTypes.object,
   }
 
   /**

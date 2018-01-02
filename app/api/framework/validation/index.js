@@ -133,4 +133,4 @@ import { Validator } from 'dantejs'
 
 */
 
-export default Validator;
+module.exports = Validator;

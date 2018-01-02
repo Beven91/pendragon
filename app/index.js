@@ -1,14 +1,12 @@
-import "./components/error/index";
-import "./components/theme/theme.css";
+import "pendragon-components/theme/theme.css";
+import Saber from "pendragon-components/error/index";
 import React from 'react'
 import ReactDOM from 'react-dom';
 import App from './containers/app';
 import { Toast } from 'antd-mobile';
-import Preload from './components/preload';
-import { Validator } from 'dantejs'
+import { Preload } from 'pendragon-components';
 import config from '../config';
-import Network from './components/network';
-import Saber from './components/error';
+import { Network, Validator } from 'framework';
 
 const SHORT = 2;
 

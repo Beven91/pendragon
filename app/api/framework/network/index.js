@@ -6,7 +6,6 @@
 
 //引入fetch polyfill
 import 'whatwg-fetch';
-import Preload from '../preload';
 import qs from 'qs';
 import dantejs, { Type, EventEmitter } from 'dantejs'
 
@@ -74,9 +73,24 @@ export default class Network {
      * @param {Object} headers  发送报文首部配置
      */
     any(uri, data, method, headers) {
-        emitter.emit('start');
-        uri = combine(uri, method, data);
-        const promise = fetch(uri, {
+        emitter.emit('start', data, headers);
+        const context = { assert: defaultAssert, useTry: false, tryMax: 0, uri, data, method, headers };
+        const promise = new Promise((resolve, reject) => this.request(context, resolve, reject, 0));
+        return new AttachResponse(promise, context);
+    }
+
+    /**
+     * 发送wx.request请求
+     * @param {Function} resolve 成功的回调通知函数
+     * @param {Function} reject 失败时的回调通知函数
+     * @param {Object} context 请求上下文参数
+     * @param {Number} tryProcess 当前尝试的次数
+     */
+    request(context, resolve, reject, tryProcess) {
+        const { uri, data, method } = context;
+        const tryRequest = this.tryRequest.bind(this, context, reject, resolve, tryProcess);
+        let headers = context.headers;
+        fetch(combine(uri, method, data), {
             //请求谓词
             method,
             //默认设置成同源模式 需要发送cookie到服务端
@@ -91,21 +105,39 @@ export default class Network {
             //请求正文
             body: adapter(data, headers, method)
         }).then((response) => {
-            const { status } = response;
+            const { statusCode } = response;
+            const isOK = statusCode >= 200 && statusCode < 300 || statusCode === 304;
+            const tryAssert = context.useTry && context.assert(response);
             emitter.emit('end', response);
             emitter.emit('response', response);
-            if (status >= 200 && status < 300 || status === 304) {
-                return response;
-            } else {
+            if (isOK && !tryAssert) {
+                resolve(response)
+            } else if (!tryRequest()) {
+                reject(response);
                 emitter.emit('error', response);
-                return Promise.reject(response);
             }
         }, (error) => {
-            emitter.emit('end', error);
-            emitter.emit('error', error);
-            return error;
+            if (!tryRequest()) {
+                emitter.emit('end', error);
+                emitter.emit('error', error);
+                reject(error);
+            }
         })
-        return new AttachResponse(promise);
+    }
+
+    /**
+     * 请求重试
+     * @param {Function} resolve 成功的回调通知函数
+     * @param {Function} reject 失败时的回调通知函数
+     * @param {Object} context 请求上下文参数
+     * @param {Number} tryProcess 当前尝试的次数
+     */
+    tryRequest(context, reject, resolve, tryProcess) {
+        const { useTry, tryMax } = context;
+        const needTry = useTry && tryProcess < tryMax;
+        console.log('retry uri:' + context.uri);
+        needTry ? this.doRequest(context, resolve, reject, ++tryProcess) : undefined;
+        return needTry;
     }
 }
 
@@ -114,7 +146,9 @@ export default class Network {
  */
 class AttachResponse {
 
-    constructor(promise) {
+    constructor(promise, context) {
+        this.contextResult = {};
+        Object.defineProperty(this, 'context', { writable: false, configurable: false, value: context });
         this.promise = promise;
     }
 
@@ -183,6 +217,44 @@ class AttachResponse {
      */
     redux() {
         return { promise: this.promise }
+    }
+
+    /**
+     * 合并其他请求
+     * @param {Promise} promise 其他请求返回的promise
+     * @param {String} name 当前合并请求的结果附加的属性名称
+     */
+    merge(promise, name) {
+        if (name === 'original') {
+            throw new Error(`name参数不能为original,改名称为默认返回值`)
+        }
+        const contextResult = this.contextResult;
+        return this.then((response) => {
+            if (!contextResult.original) {
+                contextResult.original = response;
+            }
+            return promise.then((afterResponse) => {
+                contextResult[name] = afterResponse;
+                return contextResult;
+            })
+        });
+    }
+
+    /**
+     * 开启重试机制
+     * 当网络访问失败时，进行重试
+     * @param {Number} max 重试最大的次数 默认值=1
+     * @param {Function} errorAssert 需要进行重试的条件函数,默认重试条件为:请求网络错误
+     *         例如: function(response){ return response.status!=200  };
+     *           
+     */
+    try(max = 1, errorAssert) {
+        this.context.useTry = true;
+        this.context.tryMax = max;
+        if (Type.isFunction(errorAssert)) {
+            this.context.assert = errorAssert;
+        }
+        return this;
     }
 }
 
@@ -255,4 +327,8 @@ function formdata(data = {}) {
         return qs.stringify(data);
     }
     return data;
+}
+
+function defaultAssert() {
+    return false;
 }

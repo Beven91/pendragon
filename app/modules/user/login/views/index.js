@@ -1,7 +1,6 @@
 import "./index.css"
 import React from 'react';
-import Component from '../../../../components/base';
-import Layout from '../../../../components/layout';
+import { Base,Layout } from 'pendragon-components';
 import { View, Text, Button, InputItem } from 'antd-mobile'
 
 // 校验规则
@@ -10,7 +9,7 @@ const partten = {
   password: { required: '请输入密码' }
 }
 
-class UserLoginScreen extends Component {
+class UserLoginScreen extends Base {
 
   constructor(props) {
     super(props)
