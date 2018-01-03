@@ -23,8 +23,8 @@ var compiler = new webpack(require('../build/webpack/webpack.js'))
 
 // 添加webpack打包服务中间件到app中
 app.use(webpackDevMiddleware(compiler, {
-    noInfo: true,
-    publicPath: compiler.options.output.publicPath
+  noInfo: true,
+  publicPath: compiler.options.output.publicPath
 }))
 // 添加webpack热部署中间件到app中
 app.use(webpackHotMiddleware(compiler))
@@ -36,22 +36,22 @@ app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 //设置默认返回视图
 app.use(function (req, resp, next) {
-    resp.render('index', AssetsPlugin.getIndex());
+  resp.render('index', AssetsPlugin.getIndex());
 })
 
 // 开始监听指定端口
 const server = app.listen(port, (err) => {
-    if (err) {
-        logger.error('Sorry has a error occur!')
-        logger.error(err)
-    } else {
-        let port = server.address().port
-        var accessUrl = 'http://localhost:' + port;
-        console.log('--------------------------')
-        console.log('===> 😊  Starting Pendragon ...')
-        console.log('===>  Environment: ' + process.env.NODE_ENV || 'development')
-        console.log('===>  Listening on port: ' + port)
-        console.log('===>  Url: ' + accessUrl)
-        console.log('--------------------------')
-    }
+  if (err) {
+    logger.error('Sorry has a error occur!')
+    logger.error(err)
+  } else {
+    let port = server.address().port
+    var accessUrl = 'http://localhost:' + port;
+    console.log('--------------------------')
+    console.log('===> 😊  Starting Pendragon ...')
+    console.log('===>  Environment: ' + process.env.NODE_ENV || 'development')
+    console.log('===>  Listening on port: ' + port)
+    console.log('===>  Url: ' + accessUrl)
+    console.log('--------------------------')
+  }
 })

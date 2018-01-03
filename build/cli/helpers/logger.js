@@ -16,10 +16,10 @@ function StackLogger() {
  * @param express {Boolean} true/false 
  * @param message {String} 在异常情况下需要输出的消息
  */
-StackLogger.prototype.throwif = function(express, message) {
-    if (express) {
-        throw new Error(message);
-    }
+StackLogger.prototype.throwif = function (express, message) {
+  if (express) {
+    throw new Error(message);
+  }
 }
 
 /**
@@ -27,8 +27,8 @@ StackLogger.prototype.throwif = function(express, message) {
  * @param message 消息模板
  * @param ...params 其他参数
  */
-StackLogger.prototype.log = function(message) {
-    return console.log.apply(console, this.formatArgs(arguments));
+StackLogger.prototype.log = function (message) {
+  return console.log.apply(console, this.formatArgs(arguments));
 }
 
 /**
@@ -36,8 +36,8 @@ StackLogger.prototype.log = function(message) {
  *  @param message 消息模板
  * @param ...params 其他参数
  */
-StackLogger.prototype.info = function(message) {
-    return console.info.apply(console, this.formatArgs(arguments));
+StackLogger.prototype.info = function (message) {
+  return console.info.apply(console, this.formatArgs(arguments));
 }
 
 /**
@@ -45,26 +45,26 @@ StackLogger.prototype.info = function(message) {
  *  @param message 消息模板
  * @param ...params 其他参数
  */
-StackLogger.prototype.error = function(message) {
-    return console.error.apply(console, this.formatArgs(arguments));
+StackLogger.prototype.error = function (message) {
+  return console.error.apply(console, this.formatArgs(arguments));
 }
 
 /**
  * 统一格式化格式
  */
-StackLogger.prototype.format = function(message) {
-    var date = new Date();
-    var parts = [date.getFullYear(), date.getMonth() + 1, date.getDate()];
-    var parts2 = [date.getHours(), date.getMinutes(), date.getMilliseconds()];
-    return 'Archer: ' + message;
+StackLogger.prototype.format = function (message) {
+  var date = new Date();
+  var parts = [date.getFullYear(), date.getMonth() + 1, date.getDate()];
+  var parts2 = [date.getHours(), date.getMinutes(), date.getMilliseconds()];
+  return 'Archer: ' + message;
 }
 
 /**
  * 格式化绑定
  */
-StackLogger.prototype.formatArgs = function(args) {
-    args[0] = this.format(args[0]);
-    return args;
+StackLogger.prototype.formatArgs = function (args) {
+  args[0] = this.format(args[0]);
+  return args;
 }
 
 //公布日志对象

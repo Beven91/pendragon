@@ -187,5 +187,4 @@ export default class Base extends React.PureComponent {
   onWechatConnection(wx) {
 
   }
-
 }

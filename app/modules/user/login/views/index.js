@@ -1,6 +1,6 @@
 import "./index.css"
 import React from 'react';
-import { Base,Layout } from 'components';
+import { Base, Layout } from 'components';
 import { View, Text, Button, InputItem } from 'antd-mobile'
 
 // 校验规则
@@ -31,9 +31,9 @@ class UserLoginScreen extends Base {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { code, message,name } = nextProps;
+    const { code, message, name } = nextProps;
     if (code === 0) {
-      this.forward('Home',{name:name});
+      this.forward('Home', { name: name });
     } else if (message) {
       this.showTip(message)
     }
@@ -47,7 +47,7 @@ class UserLoginScreen extends Base {
     return (
       <Layout>
         <View className="login-screen">
-          <img src="http://localhost:3003/user/login?v=242343"/>
+          <img src="http://localhost:3003/user/login?v=242343" />
           <View className="logo">Pendragon</View>
           <InputItem ref="username" className="login-input">用户名:</InputItem>
           <InputItem type="password" ref="password" className="login-input">密码:</InputItem>

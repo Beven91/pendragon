@@ -11,8 +11,8 @@ var cli = require('./cli.js')
 
 module.exports = function (argv) {
   //默认参数
-  if(argv.length<=2){
-      argv.push('-h');
+  if (argv.length <= 2) {
+    argv.push('-h');
   }
 
   program

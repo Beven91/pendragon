@@ -7,6 +7,6 @@ module.exports = {
   models: model,
   views: {
     UserLogin: connect((state) => ({ ...state.user.login }), model)(LoginScreen),
-    Home:connect((state) => ({  }), {})(HomeScreen),
+    Home: connect((state) => ({}), {})(HomeScreen),
   }
 }

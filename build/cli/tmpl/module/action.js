@@ -4,7 +4,8 @@ import { $name$Service } from 'service';
 
 module.exports = {
 
-    demo() {
-        return { name: 'demo' }
-    }
+  demo() {
+    return { name: 'demo' }
+  }
+  
 }

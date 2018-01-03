@@ -49,7 +49,7 @@ AssetsPlugin.prototype.compileIndex = function () {
 AssetsPlugin.getIndex = function (isReturnContent) {
   var target = path.resolve(config.releaseDir, 'index.html');
   var data = Object.assign({
-    version:Date.now(),
+    version: Date.now(),
     env: process.env.NODE_ENV
   }, config);
   return data;

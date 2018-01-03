@@ -4,7 +4,7 @@ module.exports = (modules) => {
   return StackNavigator({
     Root: {
       path: '',
-      rest:true,
+      rest: true,
       screen: StackNavigator({
         Index: {
           screen: modules.Index,

@@ -1,6 +1,6 @@
 
 if (process.env.NODE_ENV !== 'production') {
-  module.exports = require('./index.devlopment').default;
+  module.exports = require('./devlopment').default;
 }
 
 module.exports.onCat = function (error) {

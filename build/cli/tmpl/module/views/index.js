@@ -1,5 +1,5 @@
 import React from 'react'
-import { Base,Layout } from 'components';
+import { Base, Layout } from 'components';
 import { View } from 'antd-mobile';
 
 export default class $name$Screen extends Base {
@@ -13,7 +13,7 @@ export default class $name$Screen extends Base {
    */
   render() {
     return (
-      <View onClick={this.props.submit}>$name$</View>
+      <View>$name$</View>
     )
   }
 }

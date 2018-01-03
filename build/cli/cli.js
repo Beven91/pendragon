@@ -41,7 +41,7 @@ Archer.prototype.run = function (name) {
  * @param name {String} 业务名称
  */
 Archer.prototype.create = function (name) {
-  var dir = path.resolve('app/modules/'+name);
+  var dir = path.resolve('app/modules/' + name);
   if (!name) {
     return logger.log('请输入业务名称，例如: user/login 或者 trade ')
   } else if (fs.existsSync(dir)) {
@@ -50,7 +50,7 @@ Archer.prototype.create = function (name) {
   name = name.replace(/\\/g, '/').toLowerCase();
   var compiler = new Templater(path.join(__dirname, 'tmpl', 'module'), dir);
   var compileOptions = {
-    api:this.relative(dir, path.resolve('app/api')),
+    api: this.relative(dir, path.resolve('app/api')),
     rb: this.relative(path.join(dir, 'views'), path.resolve('app/components/base')),
     name: this.toCamel(name),
     namespace: name,
@@ -62,8 +62,8 @@ Archer.prototype.create = function (name) {
   compiler.compileTo('views/index.js', 'views/index.js', compileOptions);
 }
 
-Archer.prototype.relative= function(dir,src){
-  return  path.relative(dir, src).replace(/\\/g, '/');
+Archer.prototype.relative = function (dir, src) {
+  return path.relative(dir, src).replace(/\\/g, '/');
 }
 
 Archer.prototype.toCamel = function (name) {

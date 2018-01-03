@@ -1,6 +1,6 @@
 import { connect } from 'hanzojs/mobile'
 import model from './model'
- 
+
 module.exports = {
   models: model,
   views: {

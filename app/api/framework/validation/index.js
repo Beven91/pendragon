@@ -103,33 +103,33 @@ import { Validator } from 'dantejs'
  *     }
  */
 
- //扩展校验器
- /*
+//扩展校验器
+/*
 
-  //1.不带参数验证器
-  Validator.registerRule('myName',(value)=>{
-      return value ==="张三";
-  })
+ //1.不带参数验证器
+ Validator.registerRule('myName',(value)=>{
+     return value ==="张三";
+ })
 
-  //使用:
+ //使用:
 
-  const rules = {
-    name: {myName:'必须填写张三哈哈'}
-  }
+ const rules = {
+   name: {myName:'必须填写张三哈哈'}
+ }
  
-  //2. 带配置参数验证器
+ //2. 带配置参数验证器
 
-  Validator.registerRule('equalValue',(value,equalValue)=>{
-      //equalValue 为配置的值
-      return value === equalValue;
-  })
+ Validator.registerRule('equalValue',(value,equalValue)=>{
+     //equalValue 为配置的值
+     return value === equalValue;
+ })
 
-  //使用:
+ //使用:
 
-  const rules ={
-    name:{ equalValue:['李四','填写的名称必须为李四.....'] }
+ const rules ={
+   name:{ equalValue:['李四','填写的名称必须为李四.....'] }
 
-  }
+ }
 
 */
 

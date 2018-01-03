@@ -26,14 +26,13 @@ App.router(require('./router'))
 const Pendragon = App.start()
 
 class PendragonApp extends React.Component {
-
-    render() {
-        return (
-            <VenyLogProvider>
-                <Pendragon />
-            </VenyLogProvider>
-        )
-    }
+  render() {
+    return (
+      <VenyLogProvider>
+        <Pendragon />
+      </VenyLogProvider>
+    )
+  }
 
 }
 
