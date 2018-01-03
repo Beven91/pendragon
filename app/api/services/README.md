@@ -6,6 +6,7 @@
 
 > 例如下面定义`user`的业务接口类定义
 
+> user.js
 ```js
 
   import Service from 'framework';
