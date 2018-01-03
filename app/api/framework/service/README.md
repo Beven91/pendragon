@@ -10,6 +10,7 @@
 
 > 例如下面定义`user`的业务接口类定义
 
+> user.js
 ```js
 
   import Service from 'framework';
@@ -29,12 +30,23 @@
   module.exports = new UserService();
 ```
 
+> index.js
+
+```js
+   import User from './user' 
+   
+   export {
+     User,
+     ...
+   }
+```
+
 #### 如何使用?
 
 > 引用模块，直接调用接口函数即可
 
 ```js
-  import { User }  from './octopus';
+  import { User }  from 'services';
 
   User
     .login({count:20})
