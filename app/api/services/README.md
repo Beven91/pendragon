@@ -25,12 +25,23 @@
   module.exports = new UserService();
 ```
 
+> index.js
+
+```js
+   import User from './user' 
+   
+   export {
+     User,
+     ...
+   }
+```
+
 ## 如何使用?
 
 > 引用模块，直接调用接口函数即可
 
 ```js
-  import { User }  from './user';
+  import { User }  from 'services';
 
   User
     .login({count:20})
