@@ -11,13 +11,13 @@
 - 支持`es6` 与 `es7` 等语法
 - 支持图片压缩
 - 支持热更新
-- 支持响应式布局&样式兼容(`autoprefix`) 布局默认按照`375`宽度来布局
+- 支持响应式布局&样式兼容[`autoprefix`](https://github.com/postcss/autoprefixer) 布局默认按照`375`宽度来布局
 - 支持代码按需加载
 - 支持路由`代码拆分`
 - 支持`微信`接入
 - 支持`数据打点`
 - 支持`前端异常上报`
-- 集成`redux`
+- 集成[`redux`](https://github.com/reactjs/redux)
 - 集成[`ant-design-mobile`](https://github.com/ant-design/ant-design-mobile/)组件库
 
 &#8195;
@@ -45,7 +45,7 @@
 
 在所有的`css`文件中均使用`px`为单位，因为会统一使用`pxtorem`进行响应式单位打包输出，
 
-另外书写`css`兼容时，无需添加前缀，例如`-webkit` 因为会统一使用`autoprefixer`进行兼容打包输出
+另外书写`css`兼容时，无需添加前缀，例如`-webkit` 因为会统一使用[`autoprefix`](https://github.com/postcss/autoprefixer)进行兼容打包输出
 
 #### 代码拆分
 
@@ -74,7 +74,7 @@
 
 #### 关于Redux
 
-本项目的`redux`集成，采用[`hanzojs`](https://github.com/pamler/hanzojs)的`redux`集成方案
+本项目的[`redux`](https://github.com/reactjs/redux)集成，采用[`hanzojs`](https://github.com/pamler/hanzojs)的`redux`集成方案
 
 #### 关于导航组件
 
