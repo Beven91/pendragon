@@ -6,9 +6,9 @@
  */
 
 // 引入依赖>>
-import './base.css';
+import './index.css';
 import '../wechat';
-import { Validator } from 'framework';
+import { Validation } from 'framework';
 import React from 'react'
 import PropTypes from 'prop-types';
 import Preload from '../preload'
@@ -66,7 +66,7 @@ export default class Base extends React.PureComponent {
    * 
    */
   modelValidation(data, partten) {
-    return Validator.validator.model(data, partten);
+    return Validation.validator.model(data, partten);
   }
 
   /**

@@ -1,9 +1,9 @@
 import Network from './network';
-import Validator from './validation';
+import Validation from './validation';
 import Service from './service'
 
 export {
   Network,
   Service,
-  Validator
+  Validation,
 }

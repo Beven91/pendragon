@@ -43,7 +43,14 @@ module.exports = {
         "mode": "wrap",
         "ignoreFilenames": ["node_modules"]
       }],
-      ["import", [{ "libraryName": "antd-mobile", style: "css" }]]
+      ["import",
+        [
+          { "libraryName": "antd-mobile", style: "css" },
+          { "libraryName": "framework", style: false, libraryDirectory: '' },
+          { "libraryName": "services", style: false, libraryDirectory: '' },
+          { "libraryName": "components", style: false, libraryDirectory: '' }
+        ]
+      ],
     ]
   },
   //代碼拆分配置

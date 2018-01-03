@@ -1,5 +1,5 @@
-import UserService from './user.service';
-import WechatService from './wechat.service';
+import UserService from './UserService';
+import WechatService from './WechatService';
 
 export {
   UserService,
