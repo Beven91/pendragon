@@ -40,8 +40,11 @@
 #### 响应式布局
 
 采用`REM`单位做响应式布局，`font-size`生成方案使用`flexblejs`
+
 布局基础值为`37.5` 也就是统一使用`iPhone6`的尺寸进行调试
+
 在所有的`css`文件中均使用`px`为单位，因为会统一使用`pxtorem`进行响应式单位打包输出，
+
 另外书写`css`兼容时，无需添加前缀，例如`-webkit` 因为会统一使用`autoprefixer`进行兼容打包输出
 
 #### 代码拆分
@@ -61,11 +64,12 @@
 
 #### 数据打点
 
-数据打点有组件[`venylog`](/app/components/venylog)进行配置，具体可以参见内部打点实现
+数据打点由组件[`venylog`](/app/components/venylog)进行配置，具体可以参见内部打点实现
 
 #### 异常上报
 
 异常捕获由组件[`error`](/app/components/error)实现，在开发模式下，如果出现脚本异常会弹出一个浮层，
+
 在生产模式，可以自行配置上报后台具体查看`error`组件实现
 
 #### 关于Redux
@@ -75,7 +79,9 @@
 #### 关于导航组件
 
 项目采用`React-Navigation`作为路由组件，
+
 上层定制的导航组件为[`navigator`](/app/components/navigator) 用于实现切换动画效果
+
 以及异步组件加载支持(代码拆分的页面组件) 采用`SPA`路由为`pushState`
 
 ## 五、关于框架
