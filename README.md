@@ -39,7 +39,7 @@
 
 #### 响应式布局
 
-采用`REM`单位做响应式布局，`font-size`生成方案使用`flexblejs`
+采用`REM`单位做响应式布局，`font-size`生成方案使用[`flexblejs`](https://github.com/amfe/lib-flexible/)
 
 布局基础值为`37.5` 也就是统一使用`iPhone6`的尺寸进行调试
 
@@ -78,7 +78,7 @@
 
 #### 关于导航组件
 
-项目采用`React-Navigation`作为路由组件，
+项目采用[`React-Navigation`](https://github.com/react-navigation/react-navigation)作为路由组件，
 
 上层定制的导航组件为[`navigator`](/app/components/navigator) 用于实现切换动画效果
 
