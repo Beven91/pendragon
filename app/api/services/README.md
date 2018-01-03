@@ -30,7 +30,7 @@
 > 引用模块，直接调用接口函数即可
 
 ```js
-  import { User }  from './octopus';
+  import { User }  from './user';
 
   User
     .login({count:20})
