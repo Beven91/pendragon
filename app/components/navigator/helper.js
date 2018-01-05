@@ -4,6 +4,9 @@
  */
 const name = '@_StateId__@'
 
+let PATHEXTENSION = '';
+let PATHROOT = '';
+
 export default class NavigateHelper {
 
   /**
@@ -53,5 +56,60 @@ export default class NavigateHelper {
     const state = history.state || {};
     const isThan = (state && state.id > this.getCurrentStateID());
     return isThan;
+  }
+
+  /**
+   * 设置路由后缀 例如设置成.html  那么所有路由path默认会拼接.html 例如: path:'login' 那么可以 login.html
+   * @param {String} extension 后缀名 
+   * @param {String} rootPath 默认路由根部分 例如  web/order
+   */
+  setPathExtension(extension, rootPath = '') {
+    PATHEXTENSION = extension;
+    PATHROOT = rootPath;
+  }
+
+  /**
+   * 获取当前路由pathname
+   */
+  static getWebPath() {
+    const pathname = this.getLocationPath();
+    const pathRoot = PATHROOT;
+    const pathRootIndex = pathname.indexOf(pathRoot);
+    if (pathRootIndex > -1) {
+      return pathname.substr(pathRootIndex + pathRoot.length);
+    } else {
+      return pathname;
+    }
+  }
+
+  /**
+   * 处理路由path后缀
+   * @param {*} routeConfigs 
+   */
+  static handlePathExtensions(routeConfigs) {
+    const extension = PATHEXTENSION;
+    if (extension) {
+      Object.keys(routeConfigs).map((k) => {
+        const route = routeConfigs[k];
+        if (route.path && !route.rest) {
+          route.path = route.path + extension;
+        }
+      })
+    }
+    return routeConfigs;
+  }
+
+  /**
+   * 获取PathRoot
+   */
+  static getPathRoot() {
+    return PATHROOT;
+  }
+
+  /**
+   * 获取当前location.pathname
+   */
+  static getLocationPath() {
+    return window.location.pathname.toLowerCase();
   }
 }

@@ -5,13 +5,14 @@ import { Flex, View, Text, Button, Toast, Icon } from 'antd-mobile';
 
 class IndexScreen extends Base {
 
+  static navigationOptions = {
+    title: '欢迎您',
+  }
+
   constructor(props) {
     super(props)
     this.navigate = this.props.navigation.navigate.bind(this.props.navigation)
     this.gotoLogin = this.gotoLogin.bind(this);
-  }
-
-  componentDidMount() {
   }
 
   gotoLogin() {
@@ -32,22 +33,5 @@ class IndexScreen extends Base {
     )
   }
 }
-
-const styles = ({
-  container: {
-    paddingLeft: 30,
-    paddingRight: 30,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  fontColor: {
-    color: '#fff',
-  },
-  href: {
-    backgroundColor: '#e44c3c',
-    borderWidth: 0,
-    marginBottom: 15
-  }
-})
 
 module.exports = IndexScreen

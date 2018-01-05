@@ -33,7 +33,6 @@ class PendragonApp extends React.Component {
       </VenyLogProvider>
     )
   }
-
 }
 
 export default PendragonApp;

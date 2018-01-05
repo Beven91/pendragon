@@ -11,6 +11,10 @@ const partten = {
 
 class UserLoginScreen extends Base {
 
+  static navigationOptions = {
+    title: '登录',
+  }
+
   constructor(props) {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,7 +47,6 @@ class UserLoginScreen extends Base {
    * 渲染组件
    */
   render() {
-    console.log('Render Login........');
     return (
       <Layout>
         <View className="login-screen">

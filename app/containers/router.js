@@ -1,19 +1,9 @@
-import { StackNavigator } from 'hanzojs/router'
+import { Router } from 'components/navigator';
 
-const Route = (path, screen, title) => {
-  return { screen, path, navigationOptions: { title } }
-}
-
-module.exports = (modules) => {
-  return StackNavigator({
-    Root: {
-      path: '',
-      rest: true,
-      screen: StackNavigator({
-        Index: Route('', modules.Index, 'Pendragon'),
-        Login: Route('login', modules.UserLogin, '登录'),
-        Home: Route('home', modules.Home, '首页'),
-      })
-    }
+module.exports = (views) => {
+  return Router({
+    Index: { path: '', screen: views.Index },
+    Login: { path: 'login', screen: views.UserLogin },
+    Home: { path: 'home/:name', screen: views.Home }
   })
 }

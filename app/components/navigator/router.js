@@ -141,8 +141,12 @@ export default class DynamicComponentNavView extends React.Component {
     }
   }
 
-  empty() {
-    return (<div></div>)
+  /**
+   * 渲染页面标题
+   */
+  titleQuestion(Component) {
+    const { title } = (Component.navigationOptions || {});
+    title && (document.title = title);
   }
 
   /**
@@ -155,6 +159,7 @@ export default class DynamicComponentNavView extends React.Component {
     const { path } = router.getPathAndParamsForState(state);
     const forward = isForward || false;
     if (Component) {
+      this.titleQuestion(Component)
       return (
         <StackAnimateView route={pathName} isForward={forward}>
           <Component navigation={navigation} />

@@ -48,8 +48,15 @@ export default class Base extends React.PureComponent {
   /**
    * 获取当url的参数
    */
-  getUrlParams() {
+  get urlParams() {
     return new dantejs.UrlParser(location.href).paras;
+  }
+
+  /**
+   * 获取路由参数
+   */
+  get routeParams() {
+    return this.props.navigation.state.params || {};
   }
 
   /**

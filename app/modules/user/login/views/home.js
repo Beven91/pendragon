@@ -5,6 +5,10 @@ import { View, Flex, Text } from 'antd-mobile'; //sss
 
 export default class HomeScreen extends Base {
 
+  static navigationOptions = {
+    title: '首页',
+  }
+
   constructor(props) {
     super(props);
     //如果使用微信分享
@@ -25,17 +29,14 @@ export default class HomeScreen extends Base {
   }
 
   render() {
-    console.log('Render Home........');
-    const { params } = this.props.navigation.state
     return (
       <Layout>
         <Flex className="home-screen">
           <Flex.Item className="logo">
-            <Text>Welcome ! ${params.name}</Text>
+            <Text>Welcome ! ${this.routeParams.name}</Text>
           </Flex.Item>
         </Flex>
       </Layout>
     )
   }
-
 }
