@@ -20,6 +20,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin')
 var ProgressBarPlugin = require('progress-bar-webpack-plugin')
 var CodeSpliterPlugin = require('webpack-code-spliter').CodeSpliterPlugin;
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ConflictPlugin = require('./plugins/conflict');
 //初始化代碼拆分
 var CodeSplit = CodeSpliterPlugin.configure(config.splitRoutes, null, 'pages', config.splitWrapper);
 
@@ -80,6 +81,7 @@ module.exports = {
         RUN_ENV: JSON.stringify(process.env.RUN_ENV || "development")
       }
     }),
+    new ConflictPlugin(),
     new ProgressBarPlugin(),
     new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
     new RuntimeCapturePlugin(),
