@@ -4,15 +4,6 @@
     animation:none;
 }
 
-.am-toast .am-icon-loading.white{
-    background-image:url('./images/white.gif');
+.am-toast .am-icon-loading.default{
+    background-image:url('./images/default.gif');
 }
-  
-.am-toast .am-icon-loading.blue{
-    background-image:url('./images/blue.gif');
-}
-  
-.am-toast .am-icon-loading.blue_36{
-    background-image:url('./images/blue_36.gif');
-}
-  

@@ -45,7 +45,7 @@ export default class Preload extends React.PureComponent {
     //显示的loading消息
     message: PropTypes.string,
     //loading图标类型
-    loading: PropTypes.oneOf(['white', 'blue', 'blue_36'])
+    loading: PropTypes.oneOf(['default'])
   }
 
   /**
@@ -53,7 +53,7 @@ export default class Preload extends React.PureComponent {
    */
   static defaultProps = {
     message: '',
-    loading: 'white'
+    loading: 'default'
   }
 
   //渲染组件
