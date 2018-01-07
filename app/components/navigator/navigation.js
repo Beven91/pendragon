@@ -163,7 +163,7 @@ export default class NavigationViewer extends Component {
   componentWillUpdate(props, state) {
     const uri = this.getURI(state);
     const location = NavigateHelper.getLocationPath();
-    if (location !== uri) {
+    if (!state.popstate) {
       const id = NavigateHelper.genStateID();
       window.history.pushState({ id }, state.title, uri);
     }
