@@ -112,7 +112,8 @@ export default class NavigationViewer extends Component {
     const qs = params ? '?qs=' + encodeURIComponent(JSON.stringify(params || {})) : '';
     const pathRoot = NavigateHelper.getPathRoot();
     const webRoot = pathRoot ? pathRoot + '/' : '';
-    return `/${webRoot}${path}${qs}`.toLowerCase();
+    const pathName = path === "/" ? "" : path;
+    return `/${webRoot}${pathName}${qs}`.toLowerCase();
   }
 
   /**
@@ -161,9 +162,9 @@ export default class NavigationViewer extends Component {
    */
   componentWillUpdate(props, state) {
     const uri = this.getURI(state);
-    if (NavigateHelper.getLocationPath() !== uri) {
+    const location = NavigateHelper.getLocationPath();
+    if (location !== uri) {
       const id = NavigateHelper.genStateID();
-      console.log('change to:' + uri);
       window.history.pushState({ id }, state.title, uri);
     }
   }
