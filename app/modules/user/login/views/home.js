@@ -33,7 +33,7 @@ export default class HomeScreen extends Base {
       <Layout>
         <Flex className="home-screen">
           <Flex.Item className="logo">
-            <Text>Welcome ! ${this.routeParams.name}</Text>
+            <Text>Welcome ! ${this.routeParams.name}{this.routeParams.age}</Text>
           </Flex.Item>
         </Flex>
       </Layout>

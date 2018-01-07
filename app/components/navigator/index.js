@@ -1,6 +1,7 @@
 import Navigation from 'react-navigation';
 import NavigateHelper from './helper';
 import NavigationViewer from './navigation';
+import NavigationActions from 'react-navigation/src/NavigationActions';
 
 /**
  * 根据配置创建一个导航组件
@@ -8,10 +9,10 @@ import NavigationViewer from './navigation';
  * @param {*} stackConfig 
  */
 function StackNavigator(routeConfigs, stackConfig) {
-  let { TabRouter, createNavigator } = Navigation;
+  let { TabRouter, createNavigator, StackRouter } = Navigation;
   let routes = NavigateHelper.handlePathExtensions(routeConfigs)
-  let navigator = createNavigator(TabRouter(routes, stackConfig))(NavigationViewer);
-  navigator.initialRouteName = NavigateHelper.getWebPath();
+  let navigator = createNavigator(StackRouter(routes, stackConfig))(NavigationViewer);
+  navigator.initialRouteName = NavigateHelper.getWebPath().substring(1);
   return navigator;
 }
 
@@ -21,11 +22,7 @@ function StackNavigator(routeConfigs, stackConfig) {
  * 例如: { Index:{ screen:xxx,path:'login'  }  }
  */
 function Router(routers) {
-  return StackNavigator({
-    Root: {
-      path: '', rest: true, screen: StackNavigator({ ...routers })
-    }
-  })
+  return StackNavigator(routers, {  })
 }
 
 module.exports = {

@@ -55,8 +55,7 @@ export default class NavigationViewer extends Component {
   getNavigation() {
     const { router } = this.props;
     const state = this.state;
-    const { params } = router.getPathAndParamsForState(state);
-    state.params = params || this.getRouteParams();
+    state.params = this.getRouteParams();
     const navigation = addNavigationHelpers({ state: this.state, dispatch: this.dispatch })
     const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
     const { title } = router.getScreenOptions(screenNavigation, {});
