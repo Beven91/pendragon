@@ -2,10 +2,13 @@
  * 名称：pushState辅助工具
  * 描述：记录路由跳转数据，用于判断当前路由(pushstate)是前进还是后台
  */
+import { UrlParser } from 'dantejs';
+
 const name = '@_StateId__@'
 
 let PATHEXTENSION = '';
 let PATHROOT = '';
+let NavigateMode = 'pushState';
 
 export default class NavigateHelper {
 
@@ -22,6 +25,40 @@ export default class NavigateHelper {
    */
   static setCurrentStateID(id) {
     window.localStorage.setItem(name, id);
+  }
+
+  /**
+   * 設置當前路由模式
+   * @param {String} mode 路由模式 pushState hash 
+   */
+  static setMode(mode) {
+    NavigateMode = mode;
+  }
+
+  /**
+   * 設置當前路由模式
+   * @param {String} mode 路由模式 pushState hash 
+   */
+  static getMode() {
+    return NavigateMode;
+  }
+
+  /**
+   * 在单页跳转到第N页时，刷新了界面时的路由参数同步
+   */
+  static getRouteParams() {
+    let url = null;
+    switch (this.getMode()) {
+      case 'hash':
+        url = NavigateHelper.getWebPath();
+        break;
+      default:
+        url = location.href;
+        break;
+    }
+    const parser = new UrlParser(url);
+    const qs = parser.paras.qs || '{}';
+    return JSON.parse(qs);
   }
 
   /**
@@ -75,7 +112,7 @@ export default class NavigateHelper {
     const pathname = this.getLocationPath();
     const pathRoot = PATHROOT;
     const pathRootIndex = pathname.indexOf(pathRoot);
-    if (pathRootIndex > -1) {
+    if (pathRoot && pathRootIndex > -1) {
       return pathname.substr(pathRootIndex + pathRoot.length);
     } else {
       return pathname;
@@ -100,6 +137,13 @@ export default class NavigateHelper {
   }
 
   /**
+   * 獲取初始化的路由
+   */
+  static getInitialRouteName() {
+    return this.getWebPath().replace(/^\//, '');
+  }
+
+  /**
    * 获取PathRoot
    */
   static getPathRoot() {
@@ -110,6 +154,11 @@ export default class NavigateHelper {
    * 获取当前location.pathname
    */
   static getLocationPath() {
-    return window.location.pathname.toLowerCase();
+    switch (NavigateMode) {
+      case 'hash':
+        return window.location.hash.substr(1).toLowerCase();
+      default:
+        return window.location.pathname.toLowerCase();
+    }
   }
 }

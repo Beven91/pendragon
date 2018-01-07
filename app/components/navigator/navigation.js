@@ -1,7 +1,6 @@
 import "./navigation.css";
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { UrlParser } from 'dantejs';
 import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 import RouterView from './router';
 import NavigateHelper from './helper';
@@ -55,22 +54,13 @@ export default class NavigationViewer extends Component {
   getNavigation() {
     const { router } = this.props;
     const state = this.state;
-    state.params = this.getRouteParams();
+    state.params = NavigateHelper.getRouteParams();
     const navigation = addNavigationHelpers({ state: this.state, dispatch: this.dispatch })
     const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
     const { title } = router.getScreenOptions(screenNavigation, {});
     title && (document.title = title);
     this.navigation = navigation;
     return navigation;
-  }
-
-  /**
-   * 在单页跳转到第N页时，刷新了界面时的路由参数同步
-   */
-  getRouteParams() {
-    const parser = new UrlParser(location.href);
-    const qs = parser.paras.qs || '{}';
-    return JSON.parse(qs);
   }
 
   /**
@@ -113,7 +103,12 @@ export default class NavigationViewer extends Component {
     const pathRoot = NavigateHelper.getPathRoot();
     const webRoot = pathRoot ? pathRoot + '/' : '';
     const pathName = path === "/" ? "" : path;
-    return `/${webRoot}${pathName}${qs}`.toLowerCase();
+    switch (NavigateHelper.getMode()) {
+      case 'hash':
+        return `/${webRoot}#${pathName}${qs}`.toLowerCase();
+      default:
+        return `/${webRoot}${pathName}${qs}`.toLowerCase();;
+    }
   }
 
   /**
@@ -146,13 +141,20 @@ export default class NavigationViewer extends Component {
    */
   componentDidMount() {
     const { router } = this.props;
-    window.onpopstate = (ev) => {
+    window.addEventListener('hashchange', (ev) => {
       ev.preventDefault();
       this.dispatch({
-        ...this.getAction(NavigateHelper.getWebPath().substr(1)),
+        ...this.getAction(NavigateHelper.getInitialRouteName()),
         triggerPopState: true
       });
-    };
+    })
+    window.addEventListener('popstate', (ev) => {
+      ev.preventDefault();
+      this.dispatch({
+        ...this.getAction(NavigateHelper.getInitialRouteName()),
+        triggerPopState: true
+      });
+    });
   }
 
   /**

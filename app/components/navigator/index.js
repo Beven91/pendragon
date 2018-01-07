@@ -12,7 +12,7 @@ function StackNavigator(routeConfigs, stackConfig) {
   let { TabRouter, createNavigator, StackRouter } = Navigation;
   let routes = NavigateHelper.handlePathExtensions(routeConfigs)
   let navigator = createNavigator(StackRouter(routes, stackConfig))(NavigationViewer);
-  navigator.initialRouteName = NavigateHelper.getWebPath().substring(1);
+  navigator.initialRouteName = NavigateHelper.getInitialRouteName();
   return navigator;
 }
 
@@ -20,9 +20,11 @@ function StackNavigator(routeConfigs, stackConfig) {
  * 创建一个路由器
  * @param {Object} routers 配置的路由信息 
  * 例如: { Index:{ screen:xxx,path:'login'  }  }
+ * @param {String} mode 路由类型 可选择: hash pushState
  */
-function Router(routers) {
-  return StackNavigator(routers, {  })
+function Router(routers, mode = 'pushState') {
+  NavigateHelper.setMode(mode);
+  return StackNavigator(routers, {})
 }
 
 module.exports = {
