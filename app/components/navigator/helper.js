@@ -66,8 +66,8 @@ export default class NavigateHelper {
    */
   static genStateID() {
     let stateid = window.localStorage.getItem(name) || "0";
-    var id = parseInt(stateid) + 1;
-    return id;
+    stateid = isNaN(stateid) ? 0 : stateid;
+    return parseInt(stateid) + 1;
   }
 
   /**
@@ -76,9 +76,9 @@ export default class NavigateHelper {
   static initRoute() {
     const history = window.history;
     const state = history.state;
-    const id = (state && state.id > 0) ? state.id : this.genStateID();
+    const id = (state && !isNaN(state.id) && state.id > 0) ? state.id : this.genStateID();
     this.setCurrentStateID(id);
-    if (!state) {
+    if (!state || isNaN(state.id)) {
       history.replaceState({ id: id }, '', window.location.href);
     }
   }
@@ -160,5 +160,14 @@ export default class NavigateHelper {
       default:
         return window.location.pathname.toLowerCase();
     }
+  }
+
+  /**
+   * 跳转到指定url
+   * @param {String} url 跳转的目标url
+   */
+  static goUrl(url, state) {
+    const id = this.genStateID();
+    window.history.pushState({ id }, state.title, url);
   }
 }

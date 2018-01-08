@@ -1,9 +1,12 @@
 import "./navigation.css";
 import React, { Component } from 'react';
+import { CookieParser } from 'dantejs';
 import { PropTypes } from 'prop-types';
 import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 import RouterView from './router';
 import NavigateHelper from './helper';
+
+const cookies = new CookieParser(document.cookie);
 
 export default class NavigationViewer extends Component {
   /**
@@ -36,15 +39,17 @@ export default class NavigationViewer extends Component {
   }
 
   /**
-   * 根据router的path与params获取对应的action
-   * @param {*} path 当前访问路径
-   * @param {*} params 对应的参数
+   * 附加404路由action获取
+   * @param {*} router 
    */
-  getAction(path, params) {
-    return this.props.router.getActionForPathAndParams(path, params) || NavigationActions.navigate({
-      params: { path },
-      routeName: 'NotFound',
-    });
+  static initGetActionForPathAndParams(router) {
+    const originalGetActionForPathAndParams = router.getActionForPathAndParams.bind(router);
+    router.getActionForPathAndParams = (path, params) => {
+      return originalGetActionForPathAndParams(path, params) || NavigationActions.navigate({
+        params: { path },
+        routeName: 'NotFound',
+      });
+    };
   }
 
   /**
@@ -105,7 +110,7 @@ export default class NavigationViewer extends Component {
     const pathName = path === "/" ? "" : path;
     switch (NavigateHelper.getMode()) {
       case 'hash':
-        return `/${webRoot}#${pathName}${qs}`.toLowerCase();
+        return `#${webRoot}${pathName}${qs}`.toLowerCase();
       default:
         return `/${webRoot}${pathName}${qs}`.toLowerCase();;
     }
@@ -141,17 +146,18 @@ export default class NavigationViewer extends Component {
    */
   componentDidMount() {
     const { router } = this.props;
-    window.addEventListener('hashchange', (ev) => {
+    const context = { event: '' };
+    switch (NavigateHelper.getMode()) {
+      case 'hash':
+        context.event = 'hashchange'
+        break;
+      default:
+        context.event = 'popstate'
+    }
+    window.addEventListener(context.event, (ev) => {
       ev.preventDefault();
       this.dispatch({
-        ...this.getAction(NavigateHelper.getInitialRouteName()),
-        triggerPopState: true
-      });
-    })
-    window.addEventListener('popstate', (ev) => {
-      ev.preventDefault();
-      this.dispatch({
-        ...this.getAction(NavigateHelper.getInitialRouteName()),
+        ...this.getActionForPathAndParams(NavigateHelper.getInitialRouteName()),
         triggerPopState: true
       });
     });
@@ -166,8 +172,7 @@ export default class NavigationViewer extends Component {
     const uri = this.getURI(state);
     const location = NavigateHelper.getLocationPath();
     if (!state.popstate) {
-      const id = NavigateHelper.genStateID();
-      window.history.pushState({ id }, state.title, uri);
+      NavigateHelper.goUrl(uri,state)
     }
   }
 

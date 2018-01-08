@@ -13,6 +13,7 @@ function StackNavigator(routeConfigs, stackConfig) {
   let routes = NavigateHelper.handlePathExtensions(routeConfigs)
   let navigator = createNavigator(StackRouter(routes, stackConfig))(NavigationViewer);
   navigator.initialRouteName = NavigateHelper.getInitialRouteName();
+  NavigationViewer.initGetActionForPathAndParams(navigator.router);
   return navigator;
 }
 
