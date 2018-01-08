@@ -23,6 +23,10 @@ export default class NavigationViewer extends Component {
     navigation: PropTypes.object
   };
 
+  static contextTypes = {
+    store: PropTypes.object,
+  }
+
   /**
    * 构造函数
    * @param {*} props 
@@ -31,7 +35,6 @@ export default class NavigationViewer extends Component {
     super(props);
     const { router } = this.props;
     this.dispatch = this.dispatch.bind(this);
-    this.state = props.navigation.state;
     this.getActionForPathAndParams = this.getActionForPathAndParams.bind(this);
     this.getURIForAction = this.getURIForAction.bind(this);
     //初始化
@@ -58,9 +61,9 @@ export default class NavigationViewer extends Component {
    */
   getNavigation() {
     const { router } = this.props;
-    const state = this.state;
+    const state = this.props.navigation.state;
     state.params = NavigateHelper.getRouteParams();
-    const navigation = addNavigationHelpers({ state: this.state, dispatch: this.dispatch })
+    const navigation = addNavigationHelpers({ state: state, dispatch: this.dispatch })
     const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
     const { title } = router.getScreenOptions(screenNavigation, {});
     title && (document.title = title);
@@ -73,18 +76,12 @@ export default class NavigationViewer extends Component {
    * @param {*} action 
    */
   dispatch(action) {
-    const { router } = this.props;
-    const state = router.getStateForAction(action, this.state);
-    const isChange = state && state !== this.state;
-    if (action.type === 'Navigation/BACK') {
-      window.history.back();
-    } else if (isChange) {
-      this.setState({
-        ...state,
-        popstate: action.triggerPopState
-      })
-    }
-    return (isChange || !state);
+    const { router, navigation } = this.props;
+    const state = navigation.state;
+    const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
+    action.payload = router.getScreenOptions(screenNavigation, {});
+    this.action = action;
+    this.context.store.dispatch(action);
   }
 
   /**
@@ -154,6 +151,7 @@ export default class NavigationViewer extends Component {
       default:
         context.event = 'popstate'
     }
+    this.dispatch(router.getActionForPathAndParams(NavigateHelper.getInitialRouteName()))
     window.addEventListener(context.event, (ev) => {
       ev.preventDefault();
       this.dispatch({
@@ -166,13 +164,16 @@ export default class NavigationViewer extends Component {
   /**
    * 当路由发生改变时
    * @param {*} props 新的props
-   * @param {*} state 新的state
    */
-  componentWillUpdate(props, state) {
+  componentWillUpdate(props) {
+    const state = props.navigation.state;
     const uri = this.getURI(state);
+    const action = this.action;
     const location = NavigateHelper.getLocationPath();
-    if (!state.popstate) {
-      NavigateHelper.goUrl(uri,state)
+    if (action.type === 'Navigation/BACK') {
+      window.history.back();
+    } else if (!action.triggerPopState) {
+      NavigateHelper.goUrl(uri, state)
     }
   }
 

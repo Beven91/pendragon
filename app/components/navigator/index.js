@@ -10,11 +10,24 @@ import NavigationActions from 'react-navigation/src/NavigationActions';
  */
 function StackNavigator(routeConfigs, stackConfig) {
   let { TabRouter, createNavigator, StackRouter } = Navigation;
-  let routes = NavigateHelper.handlePathExtensions(routeConfigs)
+  let routes = handleRouteConfig(routeConfigs)
   let navigator = createNavigator(StackRouter(routes, stackConfig))(NavigationViewer);
   navigator.initialRouteName = NavigateHelper.getInitialRouteName();
   NavigationViewer.initGetActionForPathAndParams(navigator.router);
   return navigator;
+}
+
+function handleRouteConfig(routeConfigs) {
+  routeConfigs = NavigateHelper.handlePathExtensions(routeConfigs)
+  Object.keys(routeConfigs).map((k) => {
+    const route = routeConfigs[k];
+    let navigationOptions = route.navigationOptions;
+    const { permission, title } = route;
+    navigationOptions = route.navigationOptions = navigationOptions || {};
+    navigationOptions.permission = permission != null ? permission : false;
+    navigationOptions.title = navigationOptions.title || title;
+  })
+  return routeConfigs;
 }
 
 /**

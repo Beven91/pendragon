@@ -58,7 +58,9 @@ export default class NavigateHelper {
     }
     const parser = new UrlParser(url);
     const qs = parser.paras.qs || '{}';
-    return JSON.parse(qs);
+    const data = JSON.parse(qs);
+    data._path = this.getWebPath();
+    return data;
   }
 
   /**
