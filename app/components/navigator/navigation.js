@@ -151,7 +151,9 @@ export default class NavigationViewer extends Component {
       default:
         context.event = 'popstate'
     }
-    this.dispatch(router.getActionForPathAndParams(NavigateHelper.getInitialRouteName()))
+    const action = router.getActionForPathAndParams(NavigateHelper.getInitialRouteName());
+    action.type =NavigationActions.INIT;
+    this.dispatch(action)
     window.addEventListener(context.event, (ev) => {
       ev.preventDefault();
       this.dispatch({
