@@ -94,19 +94,20 @@ module.exports = {
       {
         // jsx 以及js
         test: /\.js$|\.jsx$/,
+        include: [
+          path.resolve('app'),
+          /hanzojs/,
+          /react-navigation/,
+        ],
         loader: [
           {
             loader: 'babel-loader',
             options: {
+              cacheDirectory:true,
               presets: config.babelrc.presets,
               plugins: config.babelrc.plugins
             }
           }
-        ],
-        exclude: [
-          /baebl/,
-          /babel-/,
-          /core-js/
         ]
       },
       {
@@ -121,6 +122,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
+              cacheDirectory:true,
               presets: config.babelrc.presets,
               plugins: config.babelrc.plugins
             }
@@ -132,17 +134,22 @@ module.exports = {
         // 图片类型模块资源访问
         test: /\.(png|jpg|jpeg|gif|webp|bmp|ico|jpeg)$/,
         loader: [
-          {
-            loader: 'image-web-loader',
-            options: config.minOptions
-          },
+          (
+            isProudction ?
+              {
+                loader: 'image-web-loader',
+                options: config.minOptions
+              }
+              :
+              undefined
+          ),
           {
             loader: 'file-loader',
             options: {
               name: './images/[hash].[ext]'
             }
           }
-        ]
+        ].filter(function (v) { return !!v })
       },
       {
         test: /\.(svg)$/i,
@@ -185,7 +192,10 @@ module.exports = {
         test: /\.json$/,
         loader: 'json-loader'
       }
-    ]
+    ],
+    noParse: function(content) {
+      return /whatwg-fetch/.test(content);
+    },
   },
   resolve: {
     alias: {

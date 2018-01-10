@@ -8,8 +8,7 @@
     "new": "node ./build/cli/npm.js new",
     "init": "npm install --registry=https://registry.npm.taobao.org",
     "start": "node ./server/index.js",
-    "webpack": "",
-    "install": "npm link ./app/api/framework && npm link ./app/api/services && npm link ./app/components && npm link ./config",
+    "link": "npm link ./app/api/framework && npm link ./app/api/services && npm link ./app/components && npm link ./config",
     "build": "cross-env RUN_ENV=production NODE_ENV=production webpack --config ./build/webpack/webpack.js --color",
     "build:test": "cross-env RUN_ENV=test NODE_ENV=production webpack --config ./build/webpack/webpack.js --color",
     "build:dev": "cross-env RUN_ENV=development NODE_ENV=development webpack --config ./build/webpack/webpack.js --color"
@@ -46,6 +45,7 @@
     "file-loader": "^1.1.5",
     "http-proxy": "^1.16.2",
     "image-web-loader": "^1.1.19",
+    "npm-shell": "^1.0.8",
     "postcss-loader": "^2.0.8",
     "postcss-pxtorem": "^4.0.1",
     "progress-bar-webpack-plugin": "^1.10.0",

@@ -11,6 +11,7 @@ var ejs = require('ejs');
 var express = require('express')
 var webpack = require('webpack')
 var childProcess = require('child_process')
+var Npm = require('npm-shell');
 var AssetsPlugin = require('../build/webpack/plugins/assets');
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
@@ -21,6 +22,7 @@ var app = new express()
 // 创建一个webpack编译器
 var compiler = new webpack(require('../build/webpack/webpack.js'))
 
+new Npm().run("link")
 // 添加webpack打包服务中间件到app中
 app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
