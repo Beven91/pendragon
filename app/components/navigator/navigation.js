@@ -81,6 +81,9 @@ export default class NavigationViewer extends Component {
     const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
     action.payload = router.getScreenOptions(screenNavigation, {});
     this.action = action;
+    if (action.type === 'Navigation/BACK') {
+      window.history.back();
+    }
     this.context.store.dispatch(action);
   }
 
@@ -152,7 +155,7 @@ export default class NavigationViewer extends Component {
         context.event = 'popstate'
     }
     const action = router.getActionForPathAndParams(NavigateHelper.getInitialRouteName());
-    action.type =NavigationActions.INIT;
+    action.type = NavigationActions.INIT;
     this.dispatch(action)
     window.addEventListener(context.event, (ev) => {
       ev.preventDefault();
@@ -172,9 +175,7 @@ export default class NavigationViewer extends Component {
     const uri = this.getURI(state);
     const action = this.action;
     const location = NavigateHelper.getLocationPath();
-    if (action.type === 'Navigation/BACK') {
-      window.history.back();
-    } else if (!action.triggerPopState) {
+    if (!action.triggerPopState) {
       NavigateHelper.goUrl(uri, state)
     }
   }
