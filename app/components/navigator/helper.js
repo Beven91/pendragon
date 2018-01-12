@@ -171,4 +171,12 @@ export default class NavigateHelper {
     const id = this.genStateID();
     window.history.pushState({ id }, state.title, url);
   }
+
+  /**
+   * 使用新的id替换当前history.state
+   */
+  static replace(url,state){
+    const id = this.genStateID();
+    window.history.replaceState({ id }, state.title, url);
+  }
 }

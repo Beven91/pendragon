@@ -170,8 +170,11 @@ export default class NavigationViewer extends Component {
     const state = props.navigation.state;
     const uri = this.getURI(state);
     const action = this.action;
-    if (!action.triggerPopState && action.type !== NavigationActions.BACK) {
+    const historyState = history.state;
+    if ((!action.triggerPopState) && action.type !== NavigationActions.BACK) {
       NavigateHelper.goUrl(uri, state)
+    } else if (!historyState) {
+      NavigateHelper.replace(uri, state);
     }
   }
 
