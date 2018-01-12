@@ -1,12 +1,9 @@
 import "./navigation.css";
 import React, { Component } from 'react';
-import { CookieParser } from 'dantejs';
 import { PropTypes } from 'prop-types';
 import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 import RouterView from './router';
 import NavigateHelper from './helper';
-
-const cookies = new CookieParser(document.cookie);
 
 export default class NavigationViewer extends Component {
   /**
@@ -33,7 +30,6 @@ export default class NavigationViewer extends Component {
    */
   constructor(props) {
     super(props);
-    const { router } = this.props;
     this.dispatch = this.dispatch.bind(this);
     this.getActionForPathAndParams = this.getActionForPathAndParams.bind(this);
     this.getURIForAction = this.getURIForAction.bind(this);
@@ -112,7 +108,7 @@ export default class NavigationViewer extends Component {
       case 'hash':
         return `#${webRoot}${pathName}${qs}`.toLowerCase();
       default:
-        return `/${webRoot}${pathName}${qs}`.toLowerCase();;
+        return `/${webRoot}${pathName}${qs}`.toLowerCase();
     }
   }
 
@@ -174,8 +170,7 @@ export default class NavigationViewer extends Component {
     const state = props.navigation.state;
     const uri = this.getURI(state);
     const action = this.action;
-    const location = NavigateHelper.getLocationPath();
-    if (!action.triggerPopState) {
+    if (!action.triggerPopState && action.type !== NavigationActions.BACK) {
       NavigateHelper.goUrl(uri, state)
     }
   }

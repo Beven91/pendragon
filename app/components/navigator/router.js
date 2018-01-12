@@ -82,8 +82,8 @@ export default class DynamicComponentNavView extends React.Component {
    * @param nextProps {Object} 新的props
    */
   componentWillReceiveProps(nextProps) {
-    this.state.requiredComponent = null;
     this.routeComponent = nextProps;
+    this.setState({ requiredComponent: null })
     this.asyncRequireComponent();
   }
 
@@ -102,7 +102,6 @@ export default class DynamicComponentNavView extends React.Component {
    */
   asyncRequireComponent() {
     if (this.isAsyncComponent) {
-      this.state.requiredComponent = null;
       this.onProcessing();
       //异步加载组件，然后进行渲染
       this.routeComponent().then((m) => {
@@ -154,9 +153,7 @@ export default class DynamicComponentNavView extends React.Component {
    */
   render() {
     const Component = this.state.requiredComponent;
-    const { navigation, router, isForward, pathName } = this.props;
-    const state = navigation.state;
-    const { path } = router.getPathAndParamsForState(state);
+    const { navigation, isForward, pathName } = this.props;
     const forward = isForward || false;
     if (Component) {
       this.titleQuestion(Component)

@@ -1,7 +1,6 @@
 import Navigation from 'react-navigation';
 import NavigateHelper from './helper';
 import NavigationViewer from './navigation';
-import NavigationActions from 'react-navigation/src/NavigationActions';
 
 /**
  * 根据配置创建一个导航组件
@@ -9,7 +8,7 @@ import NavigationActions from 'react-navigation/src/NavigationActions';
  * @param {*} stackConfig 
  */
 function StackNavigator(routeConfigs, stackConfig) {
-  let { TabRouter, createNavigator, StackRouter } = Navigation;
+  let { createNavigator, StackRouter } = Navigation;
   let routes = handleRouteConfig(routeConfigs)
   let navigator = createNavigator(StackRouter(routes, stackConfig))(NavigationViewer);
   navigator.initialRouteName = NavigateHelper.getInitialRouteName();

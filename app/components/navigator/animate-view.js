@@ -5,7 +5,6 @@
  *      <StackAnimateView route={path} isForward={forward}>..children...</StackAnimateView>
  */
 import React from 'react'
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 //已经加载的所有页面
@@ -72,7 +71,7 @@ export default class StackAnimateView extends React.Component {
    * @param nextState {Object} 新的state
    * @returns {Boolean} 
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate() {
     return false;
   }
 
@@ -135,7 +134,6 @@ export default class StackAnimateView extends React.Component {
    */
   renderScreens() {
     const { screens } = this.state;
-    const { activingScreen, activedScreen } = this.state;
     return screens.map((screen, index) => {
       const { route, component } = screen;
       return (<div ref={route} data-route={route} key={'screen_' + index} className="page">{component}</div>)

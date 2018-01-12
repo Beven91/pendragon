@@ -88,9 +88,8 @@ export default class NavigateHelper {
   /**
    * 判断当前popstate是前进还是后退
    * 根据当前history.state.id > 上次的state.id 如果为true则会前进 否则后退
-   * @param {Boolean} isBack 辅助判断在 history.state.id < 上次state.id时，是否有指示说明本次路由操作是后退操作
    */
-  static isForward(isBack) {
+  static isForward() {
     const history = window.history;
     const state = history.state || {};
     const isThan = (state && state.id > this.getCurrentStateID());
