@@ -3,7 +3,6 @@
  * 描述：记录路由跳转数据，用于判断当前路由(pushstate)是前进还是后台
  */
 import './polyfill';
-import { UrlParser } from 'dantejs';
 
 const name = '@_StateId__@'
 
@@ -48,20 +47,9 @@ export default class NavigateHelper {
    * 在单页跳转到第N页时，刷新了界面时的路由参数同步
    */
   static getRouteParams() {
-    let url = null;
-    switch (this.getMode()) {
-      case 'hash':
-        url = NavigateHelper.getWebPath();
-        break;
-      default:
-        url = location.href;
-        break;
-    }
-    const parser = new UrlParser(url);
-    const qs = parser.paras.qs || '{}';
-    const data = JSON.parse(qs);
-    data._path = this.getWebPath();
-    return data;
+    const state = history.state || {};
+    const params = state.params || "{}";
+    return JSON.parse(params);
   }
 
   /**
@@ -168,16 +156,18 @@ export default class NavigateHelper {
    * 跳转到指定url
    * @param {String} url 跳转的目标url
    */
-  static goUrl(url, state) {
+  static push(url, state) {
     const id = this.genStateID();
-    window.history.pushState({ id }, state.title, url);
+    const params = JSON.stringify(state.params || {});
+    window.history.pushState({ id, params }, state.title, url);
   }
 
   /**
    * 使用新的id替换当前history.state
    */
-  static replace(url,state){
+  static replace(url, state) {
     const id = this.genStateID();
-    window.history.replaceState({ id }, state.title, url);
+    const params = JSON.stringify(state.params || {});
+    window.history.replaceState({ id, params }, state.path, url);
   }
 }

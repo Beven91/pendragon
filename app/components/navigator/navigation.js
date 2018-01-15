@@ -33,6 +33,7 @@ export default class NavigationViewer extends Component {
     this.dispatch = this.dispatch.bind(this);
     this.getActionForPathAndParams = this.getActionForPathAndParams.bind(this);
     this.getURIForAction = this.getURIForAction.bind(this);
+    this.status = 'initial';
     //初始化
     NavigateHelper.initRoute();
   }
@@ -58,10 +59,10 @@ export default class NavigationViewer extends Component {
   getNavigation() {
     const { router } = this.props;
     const state = this.props.navigation.state;
-    state.params = NavigateHelper.getRouteParams();
     const navigation = addNavigationHelpers({ state: state, dispatch: this.dispatch })
     const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
     const { title } = router.getScreenOptions(screenNavigation, {});
+    state.params = state.params || NavigateHelper.getRouteParams();
     title && (document.title = title);
     this.navigation = navigation;
     return navigation;
@@ -73,12 +74,12 @@ export default class NavigationViewer extends Component {
    */
   dispatch(action) {
     const { router, navigation } = this.props;
-    const state = navigation.state;
-    const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
-    action.payload = router.getScreenOptions(screenNavigation, {});
     this.action = action;
-    if (action.type === 'Navigation/BACK') {
+    if (action.type === NavigationActions.BACK) {
       window.history.back();
+    } else if (action.type === NavigationActions.NAVIGATE) {
+      const screenNavigation = addNavigationHelpers({ ...navigation, state: { routeName: action.routeName } });
+      action.payload = router.getScreenOptions(screenNavigation, {});
     }
     this.context.store.dispatch(action);
   }
@@ -99,16 +100,15 @@ export default class NavigationViewer extends Component {
    */
   getURI(state) {
     const { router } = this.props;
-    const { path, params } = router.getPathAndParamsForState(state);
-    const qs = params ? '?qs=' + encodeURIComponent(JSON.stringify(params || {})) : '';
+    const { path } = router.getPathAndParamsForState(state);
     const pathRoot = NavigateHelper.getPathRoot();
     const webRoot = pathRoot ? pathRoot + '/' : '';
     const pathName = path === "/" ? "" : path;
     switch (NavigateHelper.getMode()) {
       case 'hash':
-        return `#${webRoot}${pathName}${qs}`.toLowerCase();
+        return `#${webRoot}${pathName}`.toLowerCase();
       default:
-        return `/${webRoot}${pathName}${qs}`.toLowerCase();
+        return `/${webRoot}${pathName}`.toLowerCase();
     }
   }
 
@@ -151,7 +151,6 @@ export default class NavigationViewer extends Component {
         context.event = 'popstate'
     }
     const action = router.getActionForPathAndParams(NavigateHelper.getInitialRouteName());
-    action.type = NavigationActions.INIT;
     this.dispatch(action)
     window.addEventListener(context.event, (ev) => {
       ev.preventDefault();
@@ -167,14 +166,17 @@ export default class NavigationViewer extends Component {
    * @param {*} props 新的props
    */
   componentWillUpdate(props) {
-    const state = props.navigation.state;
+    const { router, navigation: { state = {} } } = props;
     const uri = this.getURI(state);
-    const action = this.action;
-    const historyState = history.state;
-    if ((!action.triggerPopState) && action.type !== NavigationActions.BACK) {
-      NavigateHelper.goUrl(uri, state)
-    } else if (!historyState) {
-      NavigateHelper.replace(uri, state);
+    const { triggerPopState, type, isReplacement } = this.action;
+    const isPush = (!triggerPopState) && type !== NavigationActions.BACK && !isReplacement;
+    const state2 = router.getPathAndParamsForState(state);
+    if (this.status === 'initial') {
+      return this.status = 'ok';
+    } if (isPush) {
+      NavigateHelper.push(uri, state2)
+    } else if (!history.state || isReplacement) {
+      NavigateHelper.replace(uri, state2);
     }
   }
 
@@ -194,8 +196,13 @@ export default class NavigationViewer extends Component {
     const { state } = navigation;
     const pathName = this.getURI(state);
     const isForward = NavigateHelper.isForward()
-    return (
-      <RouterView navigation={navigation} pathName={pathName} router={router} isForward={isForward} />
-    )
+    switch (this.status) {
+      case 'initial':
+        return '';
+      default:
+        return (
+          <RouterView navigation={navigation} pathName={pathName} router={router} isForward={isForward} />
+        )
+    }
   }
 }
