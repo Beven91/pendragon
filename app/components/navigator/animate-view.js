@@ -19,8 +19,8 @@ export default class StackAnimateView extends React.Component {
 
   constructor(props) {
     super(props);
-    this.refScreens = {}; 
-    this.bindRefs= this.bindRefs.bind(this);
+    this.refScreens = {};
+    this.bindRefs = this.bindRefs.bind(this);
     this.state = {
       //当前已经加载的所有界面
       screens: [],
@@ -82,12 +82,15 @@ export default class StackAnimateView extends React.Component {
    * @param {Object} props 当前输入的属性
    */
   setNavigatorScreen(props) {
-    const { route, children } = props;
+    const { route, children, navigationOptions = {} } = props;
     const { screens } = this.state;
     let screen = CACHE[route];
     if (!screen) {
-      CACHE[route] = screen = { route: route, component: children };
+      screen = { route: route, component: children };
       screens.push(screen);
+    }
+    if (navigationOptions.cache !== false) {
+      CACHE[route] = screen;
     }
     this.setState({ screens, activingScreen: screen });
     //强制刷新
@@ -134,7 +137,7 @@ export default class StackAnimateView extends React.Component {
   /**
    * 获取ref
    */
-  bindRefs(instance){
+  bindRefs(instance) {
     const name = instance.getAttribute('data-route');
     this.refScreens[name] = instance;
   }

@@ -167,11 +167,15 @@ export default class NavigationViewer extends Component {
    */
   componentWillUpdate(props) {
     const { router, navigation: { state = {} } } = props;
+    const route = state.routes[state.index];
     const uri = this.getURI(state);
-    const { triggerPopState, type, isReplacement } = this.action;
+    const { triggerPopState, type, isReplacement,isReload } = this.action;
     const isPush = (!triggerPopState) && type !== NavigationActions.BACK && !isReplacement;
     const state2 = router.getPathAndParamsForState(state);
-    if (this.status === 'initial') {
+    route.routeName = this.action.aliasName || route.routeName;
+    if(isReload){
+      return;
+    }else if (this.status === 'initial') {
       return this.status = 'ok';
     } if (isPush) {
       NavigateHelper.push(uri, state2)

@@ -157,8 +157,9 @@ export default class DynamicComponentNavView extends React.Component {
     const forward = isForward || false;
     if (Component) {
       this.titleQuestion(Component)
+      const navigationOptions = Component.navigationOptions || {};
       return (
-        <StackAnimateView route={pathName} isForward={forward}>
+        <StackAnimateView route={pathName} isForward={forward} navigationOptions={navigationOptions}>
           <Component navigation={navigation} />
         </StackAnimateView>
       );
