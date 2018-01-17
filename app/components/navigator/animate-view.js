@@ -9,6 +9,10 @@ import PropTypes from 'prop-types';
 
 //已经加载的所有页面
 const CACHE = {};
+const PAUSE = "@PAUSE@";
+const PauseQueues = [];
+const NOOP = (a) => a;
+let screenCount = 0;
 
 export default class StackAnimateView extends React.Component {
 
@@ -43,6 +47,7 @@ export default class StackAnimateView extends React.Component {
    */
   componentDidMount() {
     this.setState({ activedScreen: this.state.activingScreen, activingScreen: null })
+    this.executeQueues();
   }
 
   /**
@@ -83,18 +88,69 @@ export default class StackAnimateView extends React.Component {
    */
   setNavigatorScreen(props) {
     const { route, children, navigationOptions = {} } = props;
+    const { cache = false } = navigationOptions;
     const { screens } = this.state;
     let screen = CACHE[route];
     if (!screen) {
-      screen = { route: route, component: children };
-      screens.push(screen);
+      this.initScrennPerformance(children)
+      screen = { id: `route_${++screenCount}`, route, component: children, cache };
+      this.pushScreen(screen);
     }
-    if (navigationOptions.cache !== false) {
-      CACHE[route] = screen;
-    }
-    this.setState({ screens, activingScreen: screen });
+    this.setState({ screens: this.clearScreens(screens), activingScreen: screen });
     //强制刷新
     this.forceUpdate();
+  }
+
+  /**
+   * push页面到栈中
+   */
+  pushScreen(screen) {
+    const route = screen.route;
+    const { screens = [] } = this.state;
+    screens.push(screen);
+    if (screen.cache) {
+      CACHE[route] = screen;
+    }
+  }
+
+  /**
+   * 延迟调用页面componentWillMount
+   */
+  initScrennPerformance(children) {
+    const type = children.type;
+    const Component = type.WrappedComponent || type;
+    if (!Component[PAUSE]) {
+      Component[PAUSE] = true;
+      const { componentWillMount = NOOP, componentDidMount = NOOP } = Component.prototype
+      Component.prototype.componentWillMount = function (...params) {
+        PauseQueues.push(componentWillMount.bind(this, ...params));
+        PauseQueues.push(componentDidMount.bind(this, ...params));
+      }
+      Component.prototype.componentDidMount = NOOP;
+    }
+  }
+
+  /**
+   * 执行延迟事件
+   */
+  executeQueues() {
+    PauseQueues.map((handler) => handler());
+    PauseQueues.length = 0;
+  }
+
+  /**
+   * 清除需要清除的页面
+   */
+  clearScreens(screens = []) {
+    const noCacheScreens = screens.filter((s) => !s.cache);
+    const noCacheCount = noCacheScreens.length;
+    const k = (screens.length - noCacheCount) >= 2 ? noCacheCount : noCacheCount - 2;
+    for (let i = 0; i < k; i++) {
+      const screen = noCacheScreens[i];
+      screen.component = null;
+      this.refScreens[screen.id];
+    }
+    return screens.filter((s) => s.component);
   }
 
   /**
@@ -105,16 +161,18 @@ export default class StackAnimateView extends React.Component {
     const { isForward } = this.props;
     const { activingScreen, activedScreen } = this.state;
     if (activedScreen) {
-      const activedDOM = refs[activedScreen.route];
-      const activingDOM = refs[activingScreen.route];
+      const activedDOM = refs[activedScreen.id];
+      const activingDOM = refs[activingScreen.id];
       const activeCls = isForward ? 'forward' : 'back';
       activingDOM.className = "page active " + activeCls;
       activedDOM.className = "page inactive " + activeCls;
       this.isAnimating = true;
       this.bindAnimationEnd(activedDOM, () => {
         this.isAnimating = false;
-        activedDOM.classList.add("backface")
         activingDOM.classList.remove('backface');
+        activedDOM.classList.add("backface")
+        //延迟执行componentWillMount
+        this.executeQueues();
       })
       this.setState({ activedScreen: activingScreen, activingScreen: null })
     }
@@ -138,8 +196,9 @@ export default class StackAnimateView extends React.Component {
    * 获取ref
    */
   bindRefs(instance) {
-    const name = instance.getAttribute('data-route');
-    this.refScreens[name] = instance;
+    if (instance) {
+      this.refScreens[instance.getAttribute('data-id')] = instance;
+    }
   }
 
   /**
@@ -147,9 +206,13 @@ export default class StackAnimateView extends React.Component {
    */
   renderScreens() {
     const { screens } = this.state;
-    return screens.map((screen, index) => {
-      const { route, component } = screen;
-      return (<div ref={this.bindRefs} data-route={route} key={'screen_' + index} className="page">{component}</div>)
+    return screens.map((screen) => {
+      const { component, id, route } = screen;
+      if (component) {
+        return (<div ref={this.bindRefs} data-route={route} data-id={id} key={id} className="page">{component}</div>)
+      } else {
+        return '';
+      }
     })
   }
 

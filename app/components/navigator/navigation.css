@@ -26,6 +26,9 @@ html,
     left:0px;
 }
 
+.pages .page.no-animation{
+  animation:none !important;
+}
 
 .pages .page.backface{
     display:none !important;
@@ -102,18 +105,22 @@ html,
 
 @keyframes activeOut {
     0%{
+        opacity: 1;
         transform:translate3d(0,0,0);
     }
     100%{
+        opacity: 0;
         transform:translate3d(0,0,-300px);
     }
 }
 
 @keyframes backActiveIn{
     0%{
+        opacity:0;
         transform:translate3d(0,0,-300px);
     }
     100%{
+        opacity:1;
         transform:translate3d(0,0,0);
     }
 }
