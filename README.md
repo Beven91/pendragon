@@ -2,7 +2,7 @@
 
 ## 一、简介
 
-`React SPA`开发案例
+`React SPA` 开发案例
 
 使用`webpack`搭建的脚手架
 
