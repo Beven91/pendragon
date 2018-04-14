@@ -9,11 +9,13 @@ function ConflictPlugin() { }
 
 ConflictPlugin.prototype.apply = function (compiler) {
   compiler.plugin('compilation', function (compilation) {
-    compilation.resolvers.normal.plugin('result', function (request, done) {
-      var filePath = request.path;
-      var segments = path.parse(filePath);
-      request.path = filePath.replace(segments.root,segments.root.toLowerCase());
-      done();
+    compiler.resolverFactory.plugin("resolver normal", function (resolver) {
+      resolver.plugin('result', function (request, done) {
+        var filePath = request.path;
+        var segments = path.parse(filePath);
+        request.path = filePath.replace(segments.root, segments.root.toLowerCase());
+        done();
+      })
     })
   });
 }

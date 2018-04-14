@@ -43,7 +43,7 @@ module.exports = {
         "mode": "wrap",
         "ignoreFilenames": ["node_modules"]
       }],
-      ["import",
+      ["refer-import",
         [
           { "libraryName": "antd-mobile", style: "css" },
           { "libraryName": "framework", style: false, libraryDirectory: '' },

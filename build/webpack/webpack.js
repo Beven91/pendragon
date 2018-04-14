@@ -15,17 +15,18 @@ var isProudction = process.env.NODE_ENV === 'production'
 // Webpack 插件
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 var RuntimeCapturePlugin = require('./plugins/capture.js');
-var AssetsPlugin = require('./plugins/assets');
 var CleanWebpackPlugin = require('clean-webpack-plugin')
-var ProgressBarPlugin = require('progress-bar-webpack-plugin')
+var AutoDllPlugin = require('autodll-webpack4-plugin');
 var CodeSpliterPlugin = require('webpack-code-spliter').CodeSpliterPlugin;
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
+var HtmlWebpackPlugin  = require('html-webpack-plugin');
 var ConflictPlugin = require('./plugins/conflict');
 //初始化代碼拆分
 var CodeSplit = CodeSpliterPlugin.configure(config.splitRoutes, null, 'pages', config.splitWrapper);
 
 // 开发环境plugins
 var devPlugins = [
+  new AutoDllPlugin({ inject: true }),
   new webpack.HotModuleReplacementPlugin()
 ]
 
@@ -35,23 +36,18 @@ var proPlugins = [
   new BundleAnalyzerPlugin({
     analyzerMode: 'static',
     openAnalyzer: false
-  }),
-  new AssetsPlugin(),
-  new webpack.optimize.UglifyJsPlugin({
-    compressor: {
-      warnings: false
-    },
-    sourceMap: true
   })
 ]
 
 module.exports = {
-  devtool: isProudction ? 'source-map' : 'source-map',
+  devtool: 'source-map',
   name: 'pendragon',
+  mode: isProudction ? 'production' : 'development',
+  stats: isProudction ? 'errors-only' : { chunks: false, assets: false, modules: false },
   context: path.dirname(config.entry),
-  stats: isProudction ? 'errors-only' : 'detailed',
   entry: {
     app: [
+      isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
       'babel-polyfill',
       'react',
       'react-dom',
@@ -64,8 +60,7 @@ module.exports = {
       'whatwg-fetch',
       'prop-types',
       './components/base',
-      './' + path.basename(config.entry),
-      isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true'
+      './' + path.basename(config.entry)
     ].filter(function (v) { return v; })
   },
   output: {
@@ -74,28 +69,33 @@ module.exports = {
     chunkFilename: '[name].js',
     publicPath: config.publicPath
   },
+  optimization: {
+    splitChunks: {
+      name: isProudction ? 'app' : true,
+      chunks: 'initial'
+    }
+  },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(isProudction ? 'production' : 'development'),
-        RUN_ENV: JSON.stringify(process.env.RUN_ENV || "development")
-      }
+      __DEV__ : JSON.stringify(isProudction),
+    }),
+    new HtmlWebpackPlugin({
+      filename:'index.html',
+      template:path.resolve('www/views/index.cshtml')
     }),
     new ConflictPlugin(),
-    new ProgressBarPlugin(),
-    new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
+   // new webpack.ProgressPlugin(),
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
     new RuntimeCapturePlugin(),
-    new CodeSpliterPlugin(isProudction ? config.releaseDir : null, false),
-    new webpack.optimize.CommonsChunkPlugin('app'),
-    new webpack.NoEmitOnErrorsPlugin(),
+    new CodeSpliterPlugin(isProudction ? config.releaseDir : null, false)
   ].concat(isProudction ? proPlugins : devPlugins),
   module: {
-    loaders: [
+    rules: [
       {
         // jsx 以及js
         test: /\.js$|\.jsx$/,
         include: [
-          path.resolve('app'),
+          /app/,
           /hanzojs/,
           /react-navigation/,
         ],
@@ -103,7 +103,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              cacheDirectory:true,
+              cacheDirectory: true,
               presets: config.babelrc.presets,
               plugins: config.babelrc.plugins
             }
@@ -122,27 +122,26 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              cacheDirectory:true,
+              cacheDirectory: true,
               presets: config.babelrc.presets,
               plugins: config.babelrc.plugins
             }
           }
-        ],
-        exclude: []
+        ]
       },
       {
         // 图片类型模块资源访问
         test: /\.(png|jpg|jpeg|gif|webp|bmp|ico|jpeg)$/,
         loader: [
-          (
-            isProudction ?
-              {
-                loader: 'image-web-loader',
-                options: config.minOptions
-              }
-              :
-              undefined
-          ),
+          // (
+          //   isProudction ?
+          //     {
+          //       loader: 'image-web-loader',
+          //       options: config.minOptions
+          //     }
+          //     :
+          //     undefined
+          // ),
           {
             loader: 'file-loader',
             options: {
@@ -159,24 +158,24 @@ module.exports = {
         ]
       },
       {
-        test: /\.css$|\.less$/i,
-        use: ['css-hot-loader'].concat(
-          ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: [
-              'css-loader', {
-                loader: 'postcss-loader', options: {
-                  ident: 'postcss',
-                  plugins: () => [
-                    autoprefixer({
-                      browsers: ['iOS >= 8', 'Android >= 4'],
-                    }),
-                    pxtorem({ rootValue: 37.5, propWhiteList: [] })
-                  ]
-                }
-              }
-            ]
-          }))
+        test: /\.(css|scss)$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: () => [
+                autoprefixer({
+                  browsers: ['iOS >= 8', 'Android >= 4'],
+                }),
+                pxtorem({ rootValue: 37.5, propWhiteList: [] })
+              ]
+            }
+          }
+        ]
       },
       {
         // url类型模块资源访问
@@ -186,20 +185,16 @@ module.exports = {
           name: '[hash].[ext]',
           limit: 10000
         }
-      },
-      {
-        // json类型模块处理
-        test: /\.json$/,
-        loader: 'json-loader'
       }
     ],
-    noParse: function(content) {
+    noParse: function (content) {
       return /whatwg-fetch/.test(content);
     },
   },
   resolve: {
     alias: {
       'hanzojs/mobile': 'hanzojs-follower/mobile',
+      'react-navigation': require.resolve('react-navigation/src/react-navigation.web.js'),
       'hanzojs/router': path.resolve('app/components/navigator/index.js'),
     },
     extensions: ['.web.js', ".js"]

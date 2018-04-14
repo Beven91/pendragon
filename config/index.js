@@ -8,4 +8,4 @@ if (process.env.RUN_ENV === "production") {
   Object.assign(Options, require('./project.development'));
 }
 
-module.exports = Options;
+export default Options;
