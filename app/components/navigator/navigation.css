@@ -3,6 +3,7 @@ html,
 #app,
 .pages{
     height:100%;
+    overflow: hidden;
 }
 
 .pages{
@@ -13,8 +14,8 @@ html,
 .pages .page{
     -webkit-transform:translate3d(0,0,0);
     transform:translate3d(0,0,0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
     position: absolute;
@@ -24,6 +25,7 @@ html,
     bottom:0px;
     right:0px;
     left:0px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .pages .page.no-animation{
@@ -36,20 +38,20 @@ html,
 
 .pages .page.forward.active{
     z-index:99;
-    animation:activeIn .4s ease;
+    animation:activeIn .33s ease;
 }
 
 .pages .page.forward.inactive{
-    animation:activeOut .4s ease;
+    animation:activeOut .33s ease;
 }
 
 .pages .page.back.active{
-    animation:backActiveIn .4s ease;
+    animation:backActiveIn .33s ease;
 }
 
 .pages .page.back.inactive{
     z-index:99;
-    animation:backActiveOut .4s ease;
+    animation:backActiveOut .33s ease;
 }
 
 .preloader-indicator-overlay {
@@ -88,6 +90,14 @@ html,
     background-repeat: no-repeat
 }
 
+.page .error-component{
+  font-size: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @keyframes preloader-spin {
     100% {
         transform: rotate(360deg)
@@ -116,11 +126,9 @@ html,
 
 @keyframes backActiveIn{
     0%{
-        opacity:0;
         transform:translate3d(0,0,-300px);
     }
     100%{
-        opacity:1;
         transform:translate3d(0,0,0);
     }
 }

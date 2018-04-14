@@ -144,7 +144,10 @@ export default class DynamicComponentNavView extends React.Component {
    * 渲染页面标题
    */
   titleQuestion(Component) {
-    const { title } = (Component.navigationOptions || {});
+    const { navigationOptions = {} } = Component.WrappedComponent ? Component.WrappedComponent : Component;
+    const isFunction = typeof navigationOptions === 'function';
+    const navigationOptions2 = isFunction ? navigationOptions(this.props) : navigationOptions
+    const { title } = (navigationOptions2 || {});
     title && (document.title = title);
   }
 
@@ -153,15 +156,13 @@ export default class DynamicComponentNavView extends React.Component {
    */
   render() {
     const Component = this.state.requiredComponent;
-    const { navigation, isForward, pathName } = this.props;
+    const { navigation, isForward, route,url } = this.props;
     const forward = isForward || false;
+    navigation.isForward = isForward;
     if (Component) {
       this.titleQuestion(Component)
-      const navigationOptions = Component.navigationOptions || {};
       return (
-        <StackAnimateView route={pathName} isForward={forward} navigationOptions={navigationOptions}>
-          <Component navigation={navigation} />
-        </StackAnimateView>
+        <StackAnimateView  url={url} route={route} navigation={navigation} isForward={forward} Component={Component} />
       );
     } else {
       return '';

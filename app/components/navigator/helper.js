@@ -3,6 +3,7 @@
  * 描述：记录路由跳转数据，用于判断当前路由(pushstate)是前进还是后台
  */
 import './polyfill';
+import Storage from './storage';
 
 const name = '@_StateId__@'
 
@@ -16,7 +17,7 @@ export default class NavigateHelper {
    * 获取当前的pushStatea对应的state.id
    */
   static getCurrentStateID() {
-    return parseInt(window.localStorage.getItem(name) || 0);
+    return parseInt(Storage.get(name) || 0);
   }
 
   /**
@@ -24,7 +25,7 @@ export default class NavigateHelper {
    * @param {*} id 
    */
   static setCurrentStateID(id) {
-    window.localStorage.setItem(name, id);
+    Storage.set(name, id);
   }
 
   /**
@@ -44,11 +45,25 @@ export default class NavigateHelper {
   }
 
   /**
+   * 获取页面异常时显示的组件
+   */
+  static get errorComponent() {
+    return this._errorComponent;
+  }
+
+  /**
+   * 设置页面异常时显示的组件
+   */
+  static set errorComponent(value) {
+    this._errorComponent = value;
+  }
+
+  /**
    * 在单页跳转到第N页时，刷新了界面时的路由参数同步
    */
   static getRouteParams() {
     const state = history.state || {};
-    const params = state.params || "{}";
+    const params = state.params || null;
     return JSON.parse(params);
   }
 
@@ -56,7 +71,7 @@ export default class NavigateHelper {
    * 生成一个新的state.id
    */
   static genStateID() {
-    let stateid = window.localStorage.getItem(name) || "0";
+    let stateid = this.getCurrentStateID() || "0";
     stateid = isNaN(stateid) ? 0 : stateid;
     return parseInt(stateid) + 1;
   }
@@ -70,8 +85,17 @@ export default class NavigateHelper {
     const id = (state && !isNaN(state.id) && state.id > 0) ? state.id : this.genStateID();
     this.setCurrentStateID(id);
     if (!state || isNaN(state.id)) {
-      history.replaceState({ id: id }, '', window.location.href);
+      const data = (state || {});
+      history.replaceState({ ...data, id: id }, '', window.location.href);
     }
+  }
+
+  /**
+   * 获取当前历史记录对应的路由记录
+   */
+  static getRouteState() {
+    const json = (history.state || {}).state;
+    return json ? JSON.parse(json) : null;
   }
 
   /**
@@ -146,9 +170,9 @@ export default class NavigateHelper {
   static getLocationPath() {
     switch (NavigateMode) {
       case 'hash':
-        return window.location.hash.substr(1).toLowerCase();
+        return window.location.hash.substr(1);
       default:
-        return window.location.pathname.toLowerCase();
+        return window.location.pathname+location.search;
     }
   }
 
@@ -156,18 +180,29 @@ export default class NavigateHelper {
    * 跳转到指定url
    * @param {String} url 跳转的目标url
    */
-  static push(url, state) {
+  static push(url, state, stateAll) {
     const id = this.genStateID();
     const params = JSON.stringify(state.params || {});
-    window.history.pushState({ id, params }, state.title, url);
+    const data = this.saveHistory(stateAll);
+    window.history.pushState({ id, params, state: data }, state.title, url);
   }
 
   /**
    * 使用新的id替换当前history.state
    */
-  static replace(url, state) {
+  static replace(url, state, stateAll) {
     const id = this.genStateID();
     const params = JSON.stringify(state.params || {});
-    window.history.replaceState({ id, params }, state.path, url);
+    const data = this.saveHistory(stateAll);
+    window.history.replaceState({ id, params, state: data }, state.path, url);
+  }
+
+  /**
+   * 存储路由历史记录
+   */
+  static saveHistory(stateAll) {
+    const routes = stateAll.routes || [];
+    const routeNames = routes.map((r) => r.routeName);
+    return JSON.stringify({ index: stateAll.index, routes: routeNames })
   }
 }

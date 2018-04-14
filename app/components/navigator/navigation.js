@@ -33,7 +33,7 @@ export default class NavigationViewer extends Component {
     this.dispatch = this.dispatch.bind(this);
     this.getActionForPathAndParams = this.getActionForPathAndParams.bind(this);
     this.getURIForAction = this.getURIForAction.bind(this);
-    this.status = 'initial';
+    this.status = "init";
     //初始化
     NavigateHelper.initRoute();
   }
@@ -56,13 +56,15 @@ export default class NavigationViewer extends Component {
    * 根据当前上下文数据原始router
    * 创建一个新的naviagation实例
    */
-  getNavigation() {
-    const { router } = this.props;
-    const state = this.props.navigation.state;
+  getNavigation(props) {
+    const { router } = props;
+    const state = props.navigation.state;
     const navigation = addNavigationHelpers({ state: state, dispatch: this.dispatch })
     const screenNavigation = addNavigationHelpers({ ...navigation, state: state.routes[state.index] });
     const { title } = router.getScreenOptions(screenNavigation, {});
-    state.params = state.params || NavigateHelper.getRouteParams();
+    const route = state.routes[state.index];
+    //同步强刷浏览器丢失的params参数
+    route.params = state.params = route.params || state.params || NavigateHelper.getRouteParams();
     title && (document.title = title);
     this.navigation = navigation;
     return navigation;
@@ -75,11 +77,27 @@ export default class NavigationViewer extends Component {
   dispatch(action) {
     const { router, navigation } = this.props;
     this.action = action;
-    if (action.type === NavigationActions.BACK) {
-      window.history.back();
-    } else if (action.type === NavigationActions.NAVIGATE) {
-      const screenNavigation = addNavigationHelpers({ ...navigation, state: { routeName: action.routeName } });
-      action.payload = router.getScreenOptions(screenNavigation, {});
+    switch (action.type) {
+      case NavigationActions.BACK:
+        action.isHistory = true;
+        window.history.back();
+        break;
+      case NavigationActions.RESET:
+        {
+          action.isHistory = true;
+          const current = action.actions[action.index];
+          const screenNavigation = addNavigationHelpers({ ...navigation, state: { routeName: current.routeName } });
+          action.payload = router.getScreenOptions(screenNavigation, {});
+        }
+        break;
+      case NavigationActions.NAVIGATE:
+        {
+          const screenNavigation = addNavigationHelpers({ ...navigation, state: { routeName: action.routeName } });
+          action.payload = router.getScreenOptions(screenNavigation, {});
+        }
+        break;
+      default:
+        break;
     }
     this.context.store.dispatch(action);
   }
@@ -102,13 +120,15 @@ export default class NavigationViewer extends Component {
     const { router } = this.props;
     const { path } = router.getPathAndParamsForState(state);
     const pathRoot = NavigateHelper.getPathRoot();
+    const url = NavigateHelper.getLocationPath();
     const webRoot = pathRoot ? pathRoot + '/' : '';
+    const qs = url.indexOf('?') > -1 ? '?' + url.split('?').slice(1) : '';
     const pathName = path === "/" ? "" : path;
     switch (NavigateHelper.getMode()) {
       case 'hash':
-        return `#${webRoot}${pathName}`.toLowerCase();
+        return `#${webRoot}${pathName}` + qs;
       default:
-        return `/${webRoot}${pathName}`.toLowerCase();
+        return `/${webRoot}${pathName}` + qs;
     }
   }
 
@@ -137,11 +157,25 @@ export default class NavigationViewer extends Component {
   }
 
   /**
+   * 组件开始渲染前
+   */
+  componentWillMount() {
+    const { state } = this.props.navigation;
+    //在强刷浏览器情况下恢复历史记录
+    const initialState = NavigateHelper.getRouteState() || state;
+    if (initialState) {
+      this.dispatch(NavigationActions.reset({
+        index: initialState.index,
+        actions: (initialState.routes || []).map((r) => NavigationActions.navigate({ params: r.params, routeName: r.routeName || r }))
+      }))
+    }
+  }
+
+  /**
    * 组件第一次渲染完毕，
    * 绑定onpopstate事件，用于执行对应的action
    */
   componentDidMount() {
-    const { router } = this.props;
     const context = { event: '' };
     switch (NavigateHelper.getMode()) {
       case 'hash':
@@ -150,13 +184,11 @@ export default class NavigationViewer extends Component {
       default:
         context.event = 'popstate'
     }
-    const action = router.getActionForPathAndParams(NavigateHelper.getInitialRouteName());
-    this.dispatch(action)
     window.addEventListener(context.event, (ev) => {
       ev.preventDefault();
       this.dispatch({
         ...this.getActionForPathAndParams(NavigateHelper.getInitialRouteName()),
-        triggerPopState: true
+        isHistory: true
       });
     });
   }
@@ -166,29 +198,39 @@ export default class NavigationViewer extends Component {
    * @param {*} props 新的props
    */
   componentWillUpdate(props) {
-    const { router, navigation: { state = {} } } = props;
+    const navigation = this.getNavigation(props);
+    const { state } = navigation;
+    const { router } = props;
     const route = state.routes[state.index];
     const uri = this.getURI(state);
-    const { triggerPopState, type, isReplacement,isReload } = this.action;
-    const isPush = (!triggerPopState) && type !== NavigationActions.BACK && !isReplacement;
+    const { isHistory, isReplacement, isReload } = this.action;
+    const isPush = !isHistory && !isReplacement;
     const state2 = router.getPathAndParamsForState(state);
-    route.routeName = this.action.aliasName || route.routeName;
-    if(isReload){
-      return;
-    }else if (this.status === 'initial') {
-      return this.status = 'ok';
-    } if (isPush) {
-      NavigateHelper.push(uri, state2)
-    } else if (!history.state || isReplacement) {
-      NavigateHelper.replace(uri, state2);
+    route.routeName = this.action.aliasName || route.aliasName || route.routeName;
+    route.params = route.params || this.action.params || {};
+    if (isReplacement) {
+      const { index, routes } = state;
+      state.index = index > 1 ? index - 1 : 0;
+      routes[routes.length - 2] = routes[routes.length - 1];
+      routes.pop();
     }
+    if (isReload) {
+      return;
+    } else if (isPush) {
+      NavigateHelper.push(uri, state2, state)
+    } else if (!history.state || isReplacement) {
+      NavigateHelper.replace(uri, state2, state);
+    }
+    this.status = "ok";
   }
 
   /**
    * 路由更新完毕，设置当前的历史记录id
    */
   componentDidUpdate() {
-    NavigateHelper.setCurrentStateID((window.history.state || {}).id);
+    setTimeout(() => {
+      NavigateHelper.setCurrentStateID((window.history.state || {}).id);
+    })
   }
 
   /**
@@ -196,17 +238,18 @@ export default class NavigationViewer extends Component {
    */
   render() {
     const { router } = this.props;
-    const navigation = this.getNavigation();
+    const navigation = this.getNavigation(this.props);
     const { state } = navigation;
-    const pathName = this.getURI(state);
+    const { path } = router.getPathAndParamsForState(state);
+    const pathName = path;
+    const routeName = state.routes[state.index].routeName;
     const isForward = NavigateHelper.isForward()
-    switch (this.status) {
-      case 'initial':
-        return '';
-      default:
-        return (
-          <RouterView navigation={navigation} pathName={pathName} router={router} isForward={isForward} />
-        )
+    if (this.status === "init") {
+      return '';
+    } else {
+      return (
+        <RouterView navigation={navigation} route={routeName} url={pathName} router={router} isForward={isForward} />
+      )
     }
   }
 }

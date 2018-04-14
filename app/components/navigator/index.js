@@ -20,11 +20,15 @@ function handleRouteConfig(routeConfigs) {
   routeConfigs = NavigateHelper.handlePathExtensions(routeConfigs)
   Object.keys(routeConfigs).map((k) => {
     const route = routeConfigs[k];
-    let navigationOptions = route.navigationOptions;
-    const { permission, title } = route;
-    navigationOptions = route.navigationOptions = navigationOptions || {};
-    navigationOptions.permission = permission != null ? permission : false;
-    navigationOptions.title = navigationOptions.title || title;
+    if (route) {
+      let navigationOptions = route.navigationOptions;
+      const { permission, title } = route;
+      navigationOptions = route.navigationOptions = navigationOptions || {};
+      navigationOptions.permission = permission != null ? permission : false;
+      navigationOptions.title = navigationOptions.title || title;
+    } else {
+      delete routeConfigs[k];
+    }
   })
   return routeConfigs;
 }
@@ -34,9 +38,11 @@ function handleRouteConfig(routeConfigs) {
  * @param {Object} routers 配置的路由信息 
  * 例如: { Index:{ screen:xxx,path:'login'  }  }
  * @param {String} mode 路由类型 可选择: hash pushState
+ * @param {Object} options 其他配置 例如: { error:当页面加载异常时的显示组件 }
  */
-function Router(routers, mode = 'pushState') {
+function Router(routers, mode = 'pushState', options = {}) {
   NavigateHelper.setMode(mode);
+  NavigateHelper.errorComponent = options.error;
   return StackNavigator(routers, {})
 }
 
