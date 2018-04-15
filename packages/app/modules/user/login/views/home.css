@@ -1,0 +1,9 @@
+.home-screen{
+    background-color:#00b2f0;
+    height: 100%;
+    text-align: center;
+}
+
+.home-screen .logo{
+    color:#fff;
+}

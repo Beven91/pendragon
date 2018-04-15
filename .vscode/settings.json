@@ -1,0 +1,11 @@
+{
+  "git.ignoreLimitWarning": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "eslint.autoFixOnSave": true,
+  "search.exclude": {
+    "**/node_modules": false,
+    "**/bower_components": true
+  },
+  "prettier.eslintIntegration": true,
+}

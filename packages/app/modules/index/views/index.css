@@ -1,0 +1,21 @@
+.splash-screen{
+    background-color:#00b2f0;
+    height:100%;
+    text-align: center;
+}
+
+.splash-screen .logo{
+    color:#fff;
+    animation: splash .4s ease-in;
+}
+
+@keyframes splash{
+    0%{
+        opacity: .3;
+        transform:scale(.3);
+    }
+    100%{
+        opacity: 1;
+        transform: scale(1);
+    }
+}

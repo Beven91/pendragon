@@ -1,0 +1,30 @@
+.login-screen{
+  height:100%;
+  background-color:#00b2f0;
+  text-align: center;
+  padding:30px 15px 0px 15px;
+}
+
+.login-screen .logo{
+  font-size:24px;
+  margin:0px 15px 80px 15px;
+  color:#fff;
+}
+
+.login-screen .login-input{
+  border-radius: 4px;
+  margin-bottom:15px;
+  background-color:transparent;
+  color: #fff;
+}
+
+.login-screen .login-input .am-input-label,
+.login-screen .login-input input{
+  color:#fff;
+}
+
+.login-screen .btn-submit{
+  border:0px;
+  margin-top:40px;
+}
+

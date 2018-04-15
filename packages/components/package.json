@@ -1,0 +1,8 @@
+{
+  "name": "components",
+  "version": "1.0.0",
+  "dependencies": {
+    "framework": "^1.0.0",
+    "configs": "^1.0.0"
+  }
+}

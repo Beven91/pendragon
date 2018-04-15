@@ -1,0 +1,24 @@
+.stack-error{
+  background: rgba(0, 0, 0, 0.85); 
+  color: rgb(232, 232, 232); 
+  line-height: 1.2; 
+  white-space: pre; 
+  font-family: Menlo, Consolas, monospace; 
+  font-size: 13px; 
+  position: fixed; 
+  z-index: 9999; 
+  padding: 10px; left: 0px; right: 0px; top: 0px; bottom: 0px; 
+  overflow: auto; 
+  text-align: left;
+}
+
+.stack-error .error{
+  margin-bottom:26px;
+}
+
+.stack-error .error .error-icon{
+  background-color:#E36049; 
+  color:#fff; 
+  padding:2px 4px; 
+  border-radius: 2px
+}

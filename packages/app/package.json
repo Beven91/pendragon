@@ -1,0 +1,10 @@
+{
+  "name": "pendragon",
+  "version": "1.0.0",
+  "dependencies": {
+    "configs": "^1.0.0",
+    "framework": "^1.0.0",
+    "components": "^1.0.0",
+    "services": "^1.0.0"
+  }
+}

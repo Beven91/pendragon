@@ -1,0 +1,7 @@
+{
+  "name": "framework",
+  "version": "1.0.0",
+  "dependencies": {
+    "configs": "^1.0.0"
+  }
+}
