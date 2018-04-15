@@ -9,7 +9,10 @@
       "type": "node",
       "request": "launch",
       "name": "启动程序",
-      "program": "${workspaceFolder}\\www\\index.js"
+      "program": "${workspaceFolder}\\www\\index.js",
+      "args": [
+        "${workspaceFolder}"
+      ]
     }
   ]
 }

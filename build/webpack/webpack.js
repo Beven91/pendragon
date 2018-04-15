@@ -16,17 +16,19 @@ var isProudction = process.env.NODE_ENV === 'production'
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 var RuntimeCapturePlugin = require('./plugins/capture.js');
 var CleanWebpackPlugin = require('clean-webpack-plugin')
-var AutoDllPlugin = require('autodll-webpack4-plugin');
+var AutoDllPlugin = require('autodll-webpack-plugin-webpack-4');
 var CodeSpliterPlugin = require('webpack-code-spliter').CodeSpliterPlugin;
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ConflictPlugin = require('./plugins/conflict');
+
 //初始化代碼拆分
 var CodeSplit = CodeSpliterPlugin.configure(config.splitRoutes, null, 'pages', config.splitWrapper);
 
 // 开发环境plugins
 var devPlugins = [
-  new AutoDllPlugin({ inject: true }),
+  new ConflictPlugin(),
+  new AutoDllPlugin({ filename: '[name].js', inject: true, entry: { dll: [] } }),
   new webpack.HotModuleReplacementPlugin()
 ]
 
@@ -43,14 +45,14 @@ module.exports = {
   devtool: 'source-map',
   name: 'pendragon',
   mode: isProudction ? 'production' : 'development',
-  stats:  { children:false,chunks: false, assets: false, modules: false },
-  context: path.resolve('packages'),
+  stats: { children: false, chunks: false, assets: false, modules: false },
+  context: path.resolve(''),
   entry: {
     app: [
       isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
-      './components/base',
       'babel-polyfill',
-      './app/index.js'
+      './packages/app/index.js',
+      './packages/components/base'
     ].filter(function (v) { return v; })
   },
   output: {
@@ -73,8 +75,7 @@ module.exports = {
       filename: 'index.html',
       template: path.resolve('www/views/index.cshtml')
     }),
-    new ConflictPlugin(),
-    new webpack.ProgressPlugin(),
+    //new webpack.ProgressPlugin(),
     new MiniCssExtractPlugin({ filename: '[name].css' }),
     new RuntimeCapturePlugin(),
     new CodeSpliterPlugin(isProudction ? config.releaseDir : null, false)
@@ -99,14 +100,13 @@ module.exports = {
       },
       {
         // jsx 以及js
-        test: /\.js$|\.jsx$/,
-        include: [
-          /packages/,
-          /hanzojs/,
-          /dantejs/,
-          /react-navigation/,
-        ],
+        test: /\.(js|jsx)$/,
+        include: CodeSplit.includes,
         loader: [
+          {
+            loader: CodeSplit.loader,
+            options: CodeSplit.options
+          },
           {
             loader: 'babel-loader',
             options: {
@@ -119,13 +119,14 @@ module.exports = {
       },
       {
         // jsx 以及js
-        test: /\.js$|\.jsx$/,
-        include: CodeSplit.includes,
+        test: /\.(js|jsx)$/,
+        include: [
+          /packages/,
+          /hanzojs/,
+          /dantejs/,
+          /react-navigation/,
+        ],
         loader: [
-          {
-            loader: CodeSplit.loader,
-            options: CodeSplit.options
-          },
           {
             loader: 'babel-loader',
             options: {

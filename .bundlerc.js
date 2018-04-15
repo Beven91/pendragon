@@ -14,6 +14,18 @@ module.exports = {
     '.html', '.pdf', // Document formats
     '.woff', '.woff2', '.woff', '.woff2', '.eot', '.ttf', //icon font
   ],
+  dllChunks:[
+    'babel-polyfill',
+    'react',
+    'react-dom',
+    'redux-thunk',
+    'redux-promise-middleware',
+    'whatwg-fetch',
+    'react-navigation',
+    'qs',
+    'hanzojs',
+    'prop-types'
+  ],
   //圖片壓縮配置
   minOptions: {
     onlyWeb: true,
@@ -88,7 +100,7 @@ function searchRoutes(searchDir, baseDir, modules) {
       var dir = path.resolve(searchDir, name);
       var index = path.join(dir, 'index.js');
       if (fs.existsSync(index)) {
-        modules.push(path.relative(baseDir, index));
+        modules.push(path.relative(baseDir, index).replace(/\\/g,'/'));
       } else if (fs.lstatSync(dir).isDirectory()) {
         searchRoutes(dir, baseDir, modules);
       }

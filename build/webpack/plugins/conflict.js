@@ -13,7 +13,7 @@ ConflictPlugin.prototype.apply = function (compiler) {
       resolver.plugin('result', function (request, done) {
         var filePath = request.path;
         var segments = path.parse(filePath);
-        request.path = filePath.replace(segments.root, segments.root.toLowerCase());
+        request.path = filePath.replace(segments.root, segments.root.toUpperCase());
         done();
       })
     })
