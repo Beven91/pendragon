@@ -1,5 +1,5 @@
 /**
- * 名称：webpack使用eval打包后 异常捕获插件
+ * @name webpack使用eval打包后 异常捕获插件
  * 描述:
  *      通常在webpack使用eval模式打包后，在模块中出现错误，
  *      如果需要全局捕获异常可能会获取到Script.error

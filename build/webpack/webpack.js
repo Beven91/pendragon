@@ -1,6 +1,6 @@
 /**
- * 名称：Webpack打包客户端
- * 描述：用于进行客户端代码打包
+ * @name Webpack打包客户端
+ * @description  用于进行客户端代码打包
  */
 
 var path = require('path')

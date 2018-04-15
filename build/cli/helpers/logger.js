@@ -1,7 +1,7 @@
 /**
- * 名称：辅助日志输出工具
- * 日期：2017-11-07
- * 描述：
+ * @name 辅助日志输出工具
+ * @date   2017-11-07
+ * @description  
  */
 
 /**
@@ -27,7 +27,7 @@ StackLogger.prototype.throwif = function (express, message) {
  * @param message 消息模板
  * @param ...params 其他参数
  */
-StackLogger.prototype.log = function (message) {
+StackLogger.prototype.log = function () {
   return console.log.apply(console, this.formatArgs(arguments));
 }
 
@@ -36,7 +36,7 @@ StackLogger.prototype.log = function (message) {
  *  @param message 消息模板
  * @param ...params 其他参数
  */
-StackLogger.prototype.info = function (message) {
+StackLogger.prototype.info = function () {
   return console.info.apply(console, this.formatArgs(arguments));
 }
 
@@ -45,7 +45,7 @@ StackLogger.prototype.info = function (message) {
  *  @param message 消息模板
  * @param ...params 其他参数
  */
-StackLogger.prototype.error = function (message) {
+StackLogger.prototype.error = function () {
   return console.error.apply(console, this.formatArgs(arguments));
 }
 
@@ -53,9 +53,6 @@ StackLogger.prototype.error = function (message) {
  * 统一格式化格式
  */
 StackLogger.prototype.format = function (message) {
-  var date = new Date();
-  var parts = [date.getFullYear(), date.getMonth() + 1, date.getDate()];
-  var parts2 = [date.getHours(), date.getMinutes(), date.getMilliseconds()];
   return 'Archer: ' + message;
 }
 
