@@ -23,6 +23,7 @@ var compiler = webpack(require('../build/webpack/webpack.js'))
 // 添加webpack打包服务中间件到app中
 app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
+  stats:compiler.options.stats,
   publicPath: compiler.options.output.publicPath
 }))
 // 添加webpack热部署中间件到app中

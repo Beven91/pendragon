@@ -43,7 +43,7 @@ module.exports = {
   devtool: 'source-map',
   name: 'pendragon',
   mode: isProudction ? 'production' : 'development',
-  stats: isProudction ? 'errors-only' : { chunks: false, assets: false, modules: false },
+  stats:  { children:false,chunks: false, assets: false, modules: false },
   context: path.resolve('packages'),
   entry: {
     app: [
