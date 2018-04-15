@@ -19,6 +19,7 @@
 - 支持`前端异常上报`
 - 集成[`redux`](https://github.com/reactjs/redux)
 - 集成[`ant-design-mobile`](https://github.com/ant-design/ant-design-mobile/)组件库
+- 项目采用`mono-repo`管理方式，使用的工具是[`lerna`](https://github.com/lerna/lerna)
 
 &#8195;
 
@@ -64,11 +65,11 @@
 
 #### 数据打点
 
-数据打点由组件[`venylog`](/app/components/venylog)进行配置，具体可以参见内部打点实现
+数据打点由组件[`venylog`](/packages/components/venylog)进行配置，具体可以参见内部打点实现
 
 #### 异常上报
 
-异常捕获由组件[`error`](/app/components/error)实现，在开发模式下，如果出现脚本异常会弹出一个浮层，
+异常捕获由组件[`error`](/packages/components/error)实现，在开发模式下，如果出现脚本异常会弹出一个浮层，
 
 在生产模式，可以自行配置上报后台具体查看`error`组件实现
 
@@ -80,15 +81,15 @@
 
 项目采用[`React-Navigation`](https://github.com/react-navigation/react-navigation)作为路由组件，
 
-上层定制的导航组件为[`navigator`](/app/components/navigator) 用于实现切换动画效果
+上层定制的导航组件为[`navigator`](/packages/components/navigator) 用于实现切换动画效果
 
 以及异步组件加载支持(代码拆分的页面组件) 采用`SPA`路由为`pushState`
 
 ## 五、关于框架
 
-- [`framework`](/app/api/framework)
-- [`services`](/app/api/services)
-- [`components`](/app/components)
+- [`framework`](/packages/framework)
+- [`services`](/packages/services)
+- [`components`](/packages/components)
 - [`modules`](/app/modules)
 
 &#8195;

@@ -5,7 +5,7 @@
 
 var path = require('path')
 var webpack = require('webpack')
-var config = require('../../.package');
+var config = require('../../.bundlerc.js');
 var autoprefixer = require('autoprefixer');
 var pxtorem = require('postcss-pxtorem');
 
@@ -19,7 +19,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin')
 var AutoDllPlugin = require('autodll-webpack4-plugin');
 var CodeSpliterPlugin = require('webpack-code-spliter').CodeSpliterPlugin;
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
-var HtmlWebpackPlugin  = require('html-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ConflictPlugin = require('./plugins/conflict');
 //初始化代碼拆分
 var CodeSplit = CodeSpliterPlugin.configure(config.splitRoutes, null, 'pages', config.splitWrapper);
@@ -44,23 +44,13 @@ module.exports = {
   name: 'pendragon',
   mode: isProudction ? 'production' : 'development',
   stats: isProudction ? 'errors-only' : { chunks: false, assets: false, modules: false },
-  context: path.dirname(config.entry),
+  context: path.resolve('packages'),
   entry: {
     app: [
       isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
-      'babel-polyfill',
-      'react',
-      'react-dom',
-      'react-navigation',
-      'dantejs',
-      'hanzojs/mobile',
-      'redux-thunk',
-      'redux-promise-middleware',
-      'hanzojs/router',
-      'whatwg-fetch',
-      'prop-types',
       './components/base',
-      './' + path.basename(config.entry)
+      'babel-polyfill',
+      './app/index.js'
     ].filter(function (v) { return v; })
   },
   output: {
@@ -77,14 +67,14 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __DEV__ : JSON.stringify(isProudction),
+      __DEV__: JSON.stringify(isProudction),
     }),
     new HtmlWebpackPlugin({
-      filename:'index.html',
-      template:path.resolve('www/views/index.cshtml')
+      filename: 'index.html',
+      template: path.resolve('www/views/index.cshtml')
     }),
     new ConflictPlugin(),
-   // new webpack.ProgressPlugin(),
+    new webpack.ProgressPlugin(),
     new MiniCssExtractPlugin({ filename: '[name].css' }),
     new RuntimeCapturePlugin(),
     new CodeSpliterPlugin(isProudction ? config.releaseDir : null, false)
@@ -92,11 +82,28 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(js|jsx)$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: [
+          /packages/,
+        ],
+        exclude: [
+          /wechat/,
+          /polyfill/,
+          /node_modules/,
+        ],
+        options: {
+
+        },
+      },
+      {
         // jsx 以及js
         test: /\.js$|\.jsx$/,
         include: [
-          /app/,
+          /packages/,
           /hanzojs/,
+          /dantejs/,
           /react-navigation/,
         ],
         loader: [

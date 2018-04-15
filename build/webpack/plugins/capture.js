@@ -21,7 +21,7 @@ function RuntimeCapturePlugin() {
  */
 RuntimeCapturePlugin.prototype.apply = function (compiler) {
   compiler.plugin('compilation', function (compilation) {
-    compilation.mainTemplate.plugin('startup', function (source, module, hash) {
+    compilation.mainTemplate.plugin('startup', function (source) {
       if (source.indexOf('originWebpackRequire') === -1) {
         return '(' + errorCapture.toString() + ')();\n' + source;
       }
@@ -39,10 +39,9 @@ function errorCapture() {
     try {
       return originWebpackRequire.apply(this, arguments);
     } catch (error) {
-      if (typeof window !== 'undefined' && typeof window.onWebpackRequireErrorCapture == 'function') {
-        return window.onWebpackRequireErrorCapture(error);
-      } else {
-        console.error(error)
+      console.error(error)
+      if (typeof window !== 'undefined' && typeof window.onWebpackPushError == 'function') {
+        return window.onWebpackPushError(error);
       }
     }
   }

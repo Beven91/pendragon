@@ -10,9 +10,6 @@ var path = require('path');
 var ejs = require('ejs');
 var express = require('express')
 var webpack = require('webpack')
-var childProcess = require('child_process')
-var Npm = require('npm-shell');
-var AssetsPlugin = require('../build/webpack/plugins/assets');
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
 
@@ -22,7 +19,6 @@ var app = new express()
 // 创建一个webpack编译器
 var compiler = webpack(require('../build/webpack/webpack.js'))
 
-new Npm().run("link")
 // 添加webpack打包服务中间件到app中
 app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
@@ -40,8 +36,8 @@ app.set('view engine', 'html');
 // 开始监听指定端口
 const server = app.listen(port, (err) => {
   if (err) {
-    logger.error('Sorry has a error occur!')
-    logger.error(err)
+    console.error('Sorry has a error occur!')
+    console.error(err)
   } else {
     let port = server.address().port
     var accessUrl = 'http://localhost:' + port;

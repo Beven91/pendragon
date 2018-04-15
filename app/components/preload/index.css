@@ -1,9 +1,0 @@
-.am-toast .am-icon-loading  {
-    margin:0px auto;
-    background-size:100%;
-    animation:none;
-}
-
-.am-toast .am-icon-loading.default{
-    background-image:url('./images/default.gif');
-}

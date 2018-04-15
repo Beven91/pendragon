@@ -1,7 +1,6 @@
 .classpath
 .project
 .idea
-.vscode/
 .idea/
 out/
 dist/
@@ -9,7 +8,6 @@ target/
 debug.log
 logs/
 yarn.lock
-__tests__/
 node_modules/
 bower_modules/
 .sass-cache/
