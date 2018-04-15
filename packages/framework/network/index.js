@@ -18,6 +18,10 @@ export default class Network {
 
   }
 
+  static Actions = {
+    NETWORKRESPONSE:'@NETWORKRESPONSE@'
+  }
+
   /**
    * 接口全局配置
    * @param {Object}  options 全局配置  { base:'',data:{} }
@@ -229,7 +233,7 @@ class AttachResponse {
    */
   redux() {
     this.then((data) => {
-      data['@@NETWORKRESPONSE@@'] = this.uri;
+      data[Network.Actions.NETWORKRESPONSE] = this.uri;
       data.__slient = this.slient;
       return data;
     });

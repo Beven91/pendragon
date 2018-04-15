@@ -3,6 +3,7 @@ import Hanzo from 'hanzojs/mobile'
 import { Venylog } from 'components';
 import thunkMiddleware from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
+import authorizeMiddleware from './filters/network';
 
 const App = new Hanzo({ isomorphic: true })
 
@@ -16,6 +17,7 @@ App.use({
     promiseMiddleware({
       promiseTypeSuffixes: ['Loading', 'Success', 'Error']
     }),
+    authorizeMiddleware,
     thunkMiddleware
   ]
 })

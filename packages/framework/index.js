@@ -14,9 +14,11 @@
 import Network from './network';
 import Validation from './validation';
 import Service from './service'
+import Profile from './profile';
 import Venylog from './venylog'
 
 export {
+  Profile,
   Network,
   Service,
   Venylog,

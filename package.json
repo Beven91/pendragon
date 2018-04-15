@@ -6,7 +6,7 @@
   "main": "www/index.js",
   "scripts": {
     "start": "node ./www/index.js",
-    "lerna": "lerna bootstrap --ignore-scripts --hoist",
+    "lerna": "lerna bootstrap --hoist --ignore-scripts",
     "new": "node ./build/cli/npm.js new",
     "postinstall": "npm run lerna",
     "build": "cross-env RUN_ENV=production NODE_ENV=production webpack --config ./build/webpack/webpack.js --color"

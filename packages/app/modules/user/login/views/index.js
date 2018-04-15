@@ -34,11 +34,9 @@ class UserLoginScreen extends Base {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { code, message, name } = nextProps;
+    const { code, name } = nextProps;
     if (code === 0) {
       this.forward('Home', { name: name, age: 20 });
-    } else if (message) {
-      this.showTip(message)
     }
   }
 
