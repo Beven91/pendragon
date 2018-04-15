@@ -1,7 +1,7 @@
 /**
- * 名称：母版页组件
- * 日期：2017-11-11
- * 描述：用于提供页面基础配置，例如头部，底部等
+ * @name 母版页组件
+ * @date   2017-11-11
+ * @description  用于提供页面基础配置，例如头部，底部等
  */
 import './index.css';
 import React from 'react';

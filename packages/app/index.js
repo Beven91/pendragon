@@ -10,8 +10,7 @@ const SHORT = 2;
 
 // 全局接口数据配置
 Network.config({
-  base: config.baseUri,
-  data: {},
+  base: config.mock === true ? '/mock/' : config.baseApi,
   loading: Preload.showLoading.bind(Preload)
 })
 // 全局接口异常提示

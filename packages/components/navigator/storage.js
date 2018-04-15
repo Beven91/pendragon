@@ -1,7 +1,7 @@
 /**
- * 名称：本地存储兼容工具
- * 日期：2018-01-23
- * 描述：用于解决部分浏览器不支持sessionStorage时，使用cookie作为临时方案
+ * @name 本地存储兼容工具
+ * @date   2018-01-23
+ * @description  用于解决部分浏览器不支持sessionStorage时，使用cookie作为临时方案
  */
 import dantejs from 'dantejs';
 // import lz from 'lz-string';

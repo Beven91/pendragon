@@ -1,7 +1,7 @@
 /**
- * 名称：页面渲染承载组件
- * 日期：2018-01-18
- * 描述：用于进行页面渲染异常处理
+ * @name 页面渲染承载组件
+ * @date   2018-01-18
+ * @description  用于进行页面渲染异常处理
  */
 import React from "react";
 import PropTypes from "prop-types";

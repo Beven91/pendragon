@@ -1,7 +1,7 @@
 /**
- * 名称：数据打点推送工具
- * 日期:2018-04-15
- * 描述：采用navigator.sendBeancon以及image兼容方式推送打点数据
+ * @name 数据打点推送工具
+ * @date  :2018-04-15
+ * @description  采用navigator.sendBeancon以及image兼容方式推送打点数据
  */
 import { Type } from 'dantejs';
 

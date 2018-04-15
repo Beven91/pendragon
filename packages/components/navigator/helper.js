@@ -1,6 +1,6 @@
 /**
- * 名称：pushState辅助工具
- * 描述：记录路由跳转数据，用于判断当前路由(pushstate)是前进还是后台
+ * @name pushState辅助工具
+ * @description  记录路由跳转数据，用于判断当前路由(pushstate)是前进还是后台
  */
 import './polyfill';
 import Storage from './storage';

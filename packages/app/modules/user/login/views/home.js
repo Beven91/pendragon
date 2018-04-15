@@ -20,7 +20,7 @@ export default class HomeScreen extends Base {
     //前提：使用了 this.connectionWechat 
     //使用了this.connectionWechat  后触发当前函数
     const share = {
-      title: '送您一张...卡',
+      title: '欢迎来到Pendragon',
       desc: '...',
       link: 'https://s.com/xxx',
       imgUrl: this.shareLogoUrl

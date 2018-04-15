@@ -1,6 +1,6 @@
 /**
- * 名称：history.state polyfill
- * 日期
+ * @name history.state polyfill
+ * @date  
  */
 import Storage from './storage'
 

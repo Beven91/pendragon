@@ -1,6 +1,6 @@
 /**
  * @module Validation
- * @name  数据校验工具
+ * @name   数据校验工具
  * @description 用于校验指定对象数据是否符合规范
  * 
  * @example
