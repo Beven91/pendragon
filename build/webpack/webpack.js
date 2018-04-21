@@ -28,7 +28,7 @@ var CodeSplit = CodeSpliterPlugin.configure(config.splitRoutes, null, 'pages', c
 // 开发环境plugins
 var devPlugins = [
   new ConflictPlugin(),
-  new AutoDllPlugin({ filename: '[name].js', inject: true, entry: { dll: [] } }),
+  new AutoDllPlugin({inherit:true, filename: '[name].js', inject: true, entry: { dll: config.dllChunks } }),
   new webpack.HotModuleReplacementPlugin()
 ]
 
