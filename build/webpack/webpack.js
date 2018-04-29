@@ -16,7 +16,7 @@ var isProudction = process.env.NODE_ENV === 'production'
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 var RuntimeCapturePlugin = require('./plugins/capture.js');
 var CleanWebpackPlugin = require('clean-webpack-plugin')
-var AutoDllPlugin = require('autodll-webpack-plugin-webpack-4');
+// var AutoDllPlugin = require('autodll-webpack-plugin-webpack-4');
 var CodeSpliterPlugin = require('webpack-code-spliter').CodeSpliterPlugin;
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -28,7 +28,7 @@ var CodeSplit = CodeSpliterPlugin.configure(config.splitRoutes, null, 'pages', c
 // 开发环境plugins
 var devPlugins = [
   new ConflictPlugin(),
-  new AutoDllPlugin({inherit:true, filename: '[name].js', inject: true, entry: { dll: config.dllChunks } }),
+  // new AutoDllPlugin({inherit:true, filename: '[name].js', inject: true, entry: { dll: config.dllChunks } }),
   new webpack.HotModuleReplacementPlugin()
 ]
 

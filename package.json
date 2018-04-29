@@ -27,7 +27,6 @@
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "autodll-webpack-plugin-webpack-4": "^1.0.0",
     "autoprefixer": "^8.2.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.1",
