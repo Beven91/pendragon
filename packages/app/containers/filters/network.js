@@ -59,6 +59,8 @@ function authorizeNetwork(next, action) {
         next(action);
         break;
     }
+  }else{
+    next(action);
   }
 }
 

@@ -5,7 +5,7 @@ import thunkMiddleware from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
 import authorizeMiddleware from './filters/network';
 
-const App = new Hanzo({ isomorphic: true })
+const App = new Hanzo({ })
 
 //模块注册
 App.registerModule(require('../modules/index'))
