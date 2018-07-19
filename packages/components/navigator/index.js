@@ -46,7 +46,7 @@ function Router(routers, mode = 'pushState', options = {}) {
   return StackNavigator(routers, {})
 }
 
-module.exports = {
+export default {
   ...Navigation,
   Router,
-};
+}

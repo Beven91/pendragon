@@ -10,7 +10,7 @@ var autoprefixer = require('autoprefixer');
 var pxtorem = require('postcss-pxtorem');
 
 //是否為生產環境
-var isProudction = process.env.NODE_ENV === 'production'
+var isProduction = process.env.NODE_ENV === 'production'
 
 // Webpack 插件
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
@@ -44,12 +44,12 @@ var proPlugins = [
 module.exports = {
   devtool: 'source-map',
   name: 'pendragon',
-  mode: isProudction ? 'production' : 'development',
+  mode: isProduction ? 'production' : 'development',
   stats: { children: false, chunks: false, assets: false, modules: false },
   context: path.resolve(''),
   entry: {
     app: [
-      isProudction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
+      isProduction ? null : 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
       'babel-polyfill',
       './packages/app/index.js',
       './packages/components/base'
@@ -57,29 +57,29 @@ module.exports = {
   },
   output: {
     path: config.releaseDir,
-    filename: '[name].js',
-    chunkFilename: '[name].js',
+    filename: isProduction ? '[name]-[hash].js' : '[name].js',
+    chunkFilename: isProduction ? '[name]-[hash].js' : '[name].js',
     publicPath: config.publicPath
   },
   optimization: {
     splitChunks: {
-      name: isProudction ? 'app' : true,
+      name: isProduction ? 'app' : true,
       chunks: 'initial'
     }
   },
   plugins: [
     new webpack.DefinePlugin({
-      __DEV__: JSON.stringify(isProudction),
+      __DEV__: JSON.stringify(isProduction),
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve('www/views/index.cshtml')
     }),
     //new webpack.ProgressPlugin(),
-    new MiniCssExtractPlugin({ filename: '[name].css' }),
+    new MiniCssExtractPlugin({ filename: isProduction ? '[name]-[hash].css' : '[name].css' }),
     new RuntimeCapturePlugin(),
-    new CodeSpliterPlugin(isProudction ? config.releaseDir : null, false)
-  ].concat(isProudction ? proPlugins : devPlugins),
+    new CodeSpliterPlugin(isProduction ? config.releaseDir : null, false)
+  ].concat(isProduction ? proPlugins : devPlugins),
   module: {
     rules: [
       {
@@ -142,7 +142,7 @@ module.exports = {
         test: /\.(png|jpg|jpeg|gif|webp|bmp|ico|jpeg)$/,
         loader: [
           // (
-          //   isProudction ?
+          //   isProduction ?
           //     {
           //       loader: 'image-web-loader',
           //       options: config.minOptions

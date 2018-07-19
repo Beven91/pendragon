@@ -12,7 +12,7 @@ import Screen from './screen';
 const CACHE = {};
 const PAUSE = "@PAUSE@";
 const NOOP = (a) => a;
-const Queues= [];
+const Queues = [];
 let screenCount = 0;
 
 export default class StackAnimateView extends React.Component {
@@ -20,7 +20,7 @@ export default class StackAnimateView extends React.Component {
   //组件属性类型
   static propTypes = {
     //当前路由对应的url
-    url:PropTypes.string,
+    url: PropTypes.string,
     //当前路由
     route: PropTypes.string,
     //导航对象
@@ -43,7 +43,7 @@ export default class StackAnimateView extends React.Component {
     this.prevInstance = null;
     this.state = {
       //当前已经加载的所有界面
-      screens: [],
+      stacks: [],
       //当前要展示的页面
       activingScreen: null,
       //目前活动的页面
@@ -69,13 +69,14 @@ export default class StackAnimateView extends React.Component {
       const activingDOM = this.refScreens[activingScreen.id];
       activingDOM && activingDOM.classList.add("active");
     }
+    this.executePageBackfaceAndFront();
   }
 
   /**
    * 当属性改变时,切换窗口样式
    */
   componentWillReceiveProps(nextProps) {
-    if (nextProps.route !== this.props.route) {
+    if (nextProps.url !== this.props.url) {
       this.setNavigatorScreen(nextProps);
     }
   }
@@ -105,7 +106,7 @@ export default class StackAnimateView extends React.Component {
   /**
    * 创建一个新的screen.id
    */
-  createId(){
+  createId() {
     return `route_${++screenCount}`;
   }
 
@@ -113,13 +114,22 @@ export default class StackAnimateView extends React.Component {
    * 当前进入的页面是否需要刷新还是使用缓存
    * @param {Object} props 当前新的属性
    */
-  shouldRefresh(props){
-    const {  Component,isForward } = props;
+  shouldRefresh(props) {
+    const { Component } = props;
     const RealComponent = Component.WrappedComponent || Component;
     const { navigationOptions = {} } = RealComponent;
-    const cacheable =('cache' in navigationOptions);
-    //在未设置cache参数时，默认isForward创建新的页面 否则根据cache来决定是否创建新的页面
-    return cacheable ?  navigationOptions.cache === false : isForward;
+    return navigationOptions.cache === false;
+  }
+
+  /**
+   * 清除操作
+   */
+  releaseScreens(screen) {
+    if (screen) {
+      const { stacks = [] } = this.state;
+      const index = stacks.indexOf(screen);
+      stacks.splice(index, 1);
+    }
   }
 
   /**
@@ -127,20 +137,42 @@ export default class StackAnimateView extends React.Component {
    * @param {Object} props 当前输入的属性
    */
   setNavigatorScreen(props) {
-    const {  Component,url } = props;
+    const { Component, url, isForward } = props;
     const route = (props.route || '').toLowerCase();
     const shouldRefresh = this.shouldRefresh(props);
-    let activingScreen = CACHE[route];
-    if (!(route in CACHE)) {
-      activingScreen = this.pushScreen({ id: this.createId(),url, route, Component })
-    }else if(shouldRefresh){
+    let activingScreen = CACHE[url] || this.getStack(url, isForward);
+    if (isForward && !activingScreen) {
+      //前进
+      activingScreen = this.pushScreen({ id: this.createId(), url, route, Component });
+    } else if (activingScreen) {
+      //如果前进且有缓存
+    } else if (activingScreen && shouldRefresh) {
+      //后退且需要刷新
       activingScreen.instance = null;
-      activingScreen.RealComponent.shouldResetRedux  = true;
+      activingScreen.cache = false;
+      activingScreen.RealComponent.shouldResetRedux = true;
       activingScreen.id = this.createId();
+    } else if (!activingScreen) {
+      //后退，且找不到screen (在中间页面 刷新了浏览器,然后点击后退)
+      activingScreen = this.pushScreen({ id: this.createId(), url, route, Component });
+    } else {
+      //后退，且无需刷新
     }
-    this.setState({ current:route, activingScreen });
+    this.setState({ activingScreen });
     //强制刷新
     this.forceUpdate();
+  }
+
+  /**
+   * 获取stack中的路由
+   */
+  getStack(url, isForward) {
+    const { stacks = [] } = this.state;
+    if (isForward) {
+      return null;
+    } else {
+      return stacks.filter((s) => s.url === url).pop();
+    }
   }
 
   /**
@@ -148,35 +180,40 @@ export default class StackAnimateView extends React.Component {
    */
   pushScreen(screen) {
     const Component = screen.Component.WrappedComponent || screen.Component;
-    const { screens = [] } = this.state;
-    CACHE[screen.route] = screen;
+    const { navigationOptions = {} } = Component;
+    const { stacks = [] } = this.state;
+    screen.cache = navigationOptions.cache;
+    screen.animate = navigationOptions.animate !== false;
+    if (screen.cache) {
+      CACHE[screen.url] = screen;
+    }
     screen.RealComponent = Component;
-    screens.push(screen);
+    stacks.push(screen);
     //组件性能优化
-    this.initScreenPerformance(screen.Component,Component.shouldResetRedux)
+    this.initScreenPerformance(screen.Component, Component.shouldResetRedux)
     return screen;
   }
 
   /**
    * 延迟调用页面componentWillMount
    */
-  initScreenPerformance(ReduxComponent,shouldResetRedux) {
+  initScreenPerformance(ReduxComponent, shouldResetRedux) {
     const thisContext = this;
     const Component = ReduxComponent.WrappedComponent || ReduxComponent;
     if (!Component[PAUSE]) {
       Component[PAUSE] = true;
-      const { componentWillMount = NOOP,shouldComponentUpdate = NOOP } = Component.prototype;
+      const { componentWillMount = NOOP, shouldComponentUpdate = NOOP } = Component.prototype;
       Component.prototype.componentWillMount = function () {
         thisContext.prevInstance = thisContext.currentInstance;
         thisContext.currentInstance = this;
         Component.shouldResetRedux = shouldResetRedux;
-        componentWillMount.apply(this,arguments);
+        componentWillMount.apply(this, arguments);
       }
-      Component.prototype.shouldComponentUpdate = function(){
-        if(Queues.indexOf(this)<0){
+      Component.prototype.shouldComponentUpdate = function () {
+        if (Queues.indexOf(this) < 0 && thisContext.isAnimating) {
           Queues.push(this);
         }
-        return thisContext.isAnimating ? false:shouldComponentUpdate.apply(this,arguments);
+        return thisContext.isAnimating ? false : shouldComponentUpdate.apply(this, arguments);
       }
     }
   }
@@ -185,8 +222,8 @@ export default class StackAnimateView extends React.Component {
    * 执行组件更新
    */
   executeComponentUpdate() {
-    if(Queues.length>0){
-      Queues.forEach((queue)=>queue.forceUpdate());
+    if (Queues.length > 0) {
+      Queues.forEach((queue) => queue.forceUpdate());
       Queues.length = 0;
     }
   }
@@ -194,13 +231,13 @@ export default class StackAnimateView extends React.Component {
   /**
    * 执行页面组件离开事件与页面进入事件
    */
-  executePageBackfaceAndFront(){
+  executePageBackfaceAndFront() {
     const actived = this.prevInstance;
     const activing = this.currentInstance;
-    if(actived && typeof actived.componentDidHidden === 'function'){
+    if (actived && typeof actived.componentDidHidden === 'function') {
       actived.componentDidHidden();
     }
-    if(activing && typeof activing.componentDidShow === 'function'){
+    if (activing && typeof activing.componentDidShow === 'function') {
       activing.componentDidShow();
     }
   }
@@ -212,13 +249,22 @@ export default class StackAnimateView extends React.Component {
     const refs = this.refScreens;
     const { isForward } = this.props;
     const { activingScreen = {}, activedScreen = {} } = this.state;
+    if (!activingScreen) {
+      return;
+    }
+    const animateCls = (activingScreen.animate || activedScreen.animate && !isForward) ? 'animate' : 'no-animation'
     const activedDOM = refs[activedScreen.id];
     const activingDOM = refs[activingScreen.id];
+    if (!isForward) {
+      const prev = this.prevInstance;
+      this.prevInstance = this.currentInstance;
+      this.currentInstance = prev;
+    }
     this.context.store.dispatch({ type: 'NavigateTransition', payload: { prev: activedDOM, current: activingDOM } })
     if (activedDOM && activingDOM) {
       const activeCls = isForward ? 'forward' : 'back';
-      activingDOM.className = "page active " + activeCls;
-      activedDOM.className = "page inactive " + activeCls;
+      activingDOM.className = `page active-screen ${activeCls} ${animateCls}`;
+      activedDOM.className = `page inactive-screen ${activeCls}  ${animateCls}`;
       this.isAnimating = true;
       this.bindAnimationEnd(activedDOM, () => {
         this.isAnimating = false;
@@ -226,8 +272,10 @@ export default class StackAnimateView extends React.Component {
         activedDOM.classList.add("backface")
         //延迟执行componentWillMount
         this.executeComponentUpdate();
-        this.executePageBackfaceAndFront(activingScreen,activedScreen)
-
+        this.executePageBackfaceAndFront()
+        if (!isForward && activedScreen) {
+          this.releaseScreens(activedScreen);
+        }
       })
       this.setState({ activedScreen: activingScreen, activingScreen: null })
     }
@@ -237,6 +285,11 @@ export default class StackAnimateView extends React.Component {
    * 绑定元素animationend事件
    */
   bindAnimationEnd(element, callback) {
+    const styles = window.getComputedStyle(element);
+    const name = styles['webkitAnimationName'] || styles['animationName'];
+    if (name === 'none' || !name) {
+      return callback();
+    }
     function once() {
       element.removeEventListener('webkitAnimationEnd', once);
       element.removeEventListener('animationEnd', once);
@@ -262,11 +315,11 @@ export default class StackAnimateView extends React.Component {
    */
   screens() {
     const { navigation } = this.props;
-    const { screens,current,activedScreen } = this.state;
-    return screens
-      .filter((screen) => screen && screen.Component && (screen.route===current || screen===activedScreen) )
+    const { stacks, activedScreen, activingScreen } = this.state;
+    return stacks
+      .filter((screen) => screen && screen.Component && (screen === activingScreen || screen === activedScreen))
       .map((screen) => {
-        return (<Screen key={screen.id} current={current} navigation={navigation} screen={screen} ref={this.bindRefs} />)
+        return (<Screen key={screen.id} navigation={navigation} screen={screen} ref={this.bindRefs} />)
       })
   }
 
@@ -281,4 +334,3 @@ export default class StackAnimateView extends React.Component {
     );
   }
 }
-

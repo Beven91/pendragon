@@ -102,12 +102,12 @@ export default class DynamicComponentNavView extends React.Component {
    */
   asyncRequireComponent() {
     if (this.isAsyncComponent) {
-      this.onProcessing();
+      const closeProcessing = this.onProcessing();
       //异步加载组件，然后进行渲染
       this.routeComponent().then((m) => {
         let requiredComponent = (m.default || m);
         this.setState({ requiredComponent });
-        this.onProcessed();
+        closeProcessing ? closeProcessing() : this.onProcessed();
       })
     } else if (this.routeComponent !== this.state.requiredComponent) {
       //如果传入的是同步组件
@@ -122,9 +122,9 @@ export default class DynamicComponentNavView extends React.Component {
   onProcessing() {
     const { onProcessing } = this.props;
     if (isFunction(onProcessing)) {
-      onProcessing();
+      return onProcessing();
     } else {
-      Processing.show();
+      return Processing.show();
     }
   }
 
@@ -156,13 +156,13 @@ export default class DynamicComponentNavView extends React.Component {
    */
   render() {
     const Component = this.state.requiredComponent;
-    const { navigation, isForward, route,url } = this.props;
+    const { navigation, isForward, route, url } = this.props;
     const forward = isForward || false;
     navigation.isForward = isForward;
     if (Component) {
       this.titleQuestion(Component)
       return (
-        <StackAnimateView  url={url} route={route} navigation={navigation} isForward={forward} Component={Component} />
+        <StackAnimateView url={url} route={route} navigation={navigation} isForward={forward} Component={Component} />
       );
     } else {
       return '';

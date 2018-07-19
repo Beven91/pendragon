@@ -1,6 +1,6 @@
 /**
- * @name pushState辅助工具
- * @description  记录路由跳转数据，用于判断当前路由(pushstate)是前进还是后台
+ * 名称：pushState辅助工具
+ * 描述：记录路由跳转数据，用于判断当前路由(pushstate)是前进还是后台
  */
 import './polyfill';
 import Storage from './storage';
@@ -172,7 +172,7 @@ export default class NavigateHelper {
       case 'hash':
         return window.location.hash.substr(1);
       default:
-        return window.location.pathname + location.search;
+        return window.location.pathname+location.search;
     }
   }
 

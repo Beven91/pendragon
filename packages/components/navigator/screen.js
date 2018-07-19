@@ -1,7 +1,7 @@
 /**
- * @name 页面渲染承载组件
- * @date   2018-01-18
- * @description  用于进行页面渲染异常处理
+ * 名称：页面渲染承载组件
+ * 日期：2018-01-18
+ * 描述：用于进行页面渲染异常处理
  */
 import React from "react";
 import PropTypes from "prop-types";
@@ -10,8 +10,6 @@ import NavigateHelper from "./helper";
 export default class Screen extends React.PureComponent {
   //组件属性类型
   static propTypes = {
-    //当前要显示的页面路由
-    current: PropTypes.string,
     //当前要显示的页面信息 {}
     screen: PropTypes.shape({
       route: PropTypes.string,

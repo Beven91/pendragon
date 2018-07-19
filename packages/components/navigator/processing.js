@@ -3,7 +3,7 @@ import Preload from '../preload';
 export default class Processing {
 
   static show() {
-    Preload.showLoading('',true,false)
+    return Preload.showLoading('', true, false)
   }
 
   static hide() {
